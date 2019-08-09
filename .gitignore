@@ -27,6 +27,7 @@ ExportedObj/
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
+*.meta
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
@@ -34,3 +35,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# own added ignore filters
+Assets/Mapbox
+Assets/Resources/Mapbox
+Assets/RandomFromDistributions/Examples
