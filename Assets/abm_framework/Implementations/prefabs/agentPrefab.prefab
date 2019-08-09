@@ -101,12 +101,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6946409410397387495}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d10f6640761f9f64590341198252d4aa, type: 3}
+  m_Script: {fileID: 11500000, guid: f3277bee48230404e999cf26e63776e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angle: 34.4
-  viewRange: 17.2
-  speed: 1.453
+  angle: 33.3
+  viewRange: 19.8
+  speed: 1.181
   agentLm:
     serializedVersion: 2
     m_Bits: 512
