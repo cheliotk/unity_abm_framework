@@ -24,5 +24,5 @@ public class simController : AbstractController
         if(bounds == null){
             bounds = new Bounds(Vector3.zero, new Vector3(100f,10f,100f));
         }
-    }  
+    }
 }
