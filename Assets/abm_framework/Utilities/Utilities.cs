@@ -15,5 +15,7 @@ namespace ABM
                 Random.Range(bounds.min.z, bounds.max.z)
             );
         }
+
+        public delegate void Del();
     }
 }
