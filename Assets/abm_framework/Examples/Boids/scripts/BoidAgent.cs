@@ -23,11 +23,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+
 using ABM.Core;
-using ABM;
 
 public class BoidAgent : AbstractAgent
 {
@@ -52,11 +51,24 @@ public class BoidAgent : AbstractAgent
         this.transform.position = _pos;
         this.transform.rotation = _rot;
 
-        CreateStepper(1, BoidBehaviour, 100);
-        CreateStepper(1, CheckOutOfBounds, 200);
+        CreateStepper(1, BoidBehaviourFindNeighbours, 100);
+        CreateStepper(1, BoidBehaviourMove, 500);
+        CreateStepper(1, CheckOutOfBounds, 600);
     }
 
-    void BoidBehaviour(){
+    void BoidBehaviourFindNeighbours(){
+        // Looks up nearby boids.
+        nearbyBoids = Physics.OverlapSphere(this.transform.position, boidController.neighborDist, boidController.searchLayer);
+        if(Selection.Contains(this.gameObject)){
+            for (int i = 0; i < nearbyBoids.Length; i++)
+            {
+                Vector3 p = nearbyBoids[i].transform.position;
+                Debug.DrawLine(this.transform.position, p, Color.cyan);
+            }
+        }
+    }
+
+    void BoidBehaviourMove(){
         var currentPosition = transform.position;
         var currentRotation = transform.rotation;
 
@@ -68,9 +80,6 @@ public class BoidAgent : AbstractAgent
         var separation = Vector3.zero;
         var alignment = this.transform.forward;
         var cohesion = this.transform.position;
-
-        // Looks up nearby boids.
-        nearbyBoids = Physics.OverlapSphere(currentPosition, boidController.neighborDist, boidController.searchLayer);
 
         // Accumulates the vectors.
         foreach (var boid in nearbyBoids)
@@ -117,17 +126,6 @@ public class BoidAgent : AbstractAgent
             Vector3 fromCenterToHere = this.transform.position - bounds.center;
             this.transform.position = bounds.center - fromCenterToHere;
             transform.position = this.transform.position + transform.forward * (velocity * Time.deltaTime);
-        }
-    }
-
-    private void OnDrawGizmosSelected() {
-        if(nearbyBoids != null){
-            Gizmos.color = Color.cyan;
-            for (int i = 0; i < nearbyBoids.Length; i++)
-            {
-                Vector3 p = nearbyBoids[i].transform.position;
-                Gizmos.DrawLine(this.transform.position, p);
-            }
         }
     }
 }

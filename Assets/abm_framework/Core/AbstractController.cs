@@ -15,6 +15,8 @@ namespace ABM
                 }
             }
 
+            int simStartTime;
+
             public void RegisterAgent(AbstractAgent a){
                 _agents.Add(a);
             }
@@ -25,11 +27,26 @@ namespace ABM
 
             public virtual void Init(){
                 agents = new List<AbstractAgent>();
+                simStartTime = Time.frameCount;
+            }
+
+            public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
+                foreach (AbstractAgent a in agents){
+                    a.Step();
+                }
             }
 
             public virtual void Step(){
-                foreach (AbstractAgent a in agents){
-                    a.Step();
+                if(Time.frameCount - simStartTime <=0){
+                    return;
+                }
+                AgentStepLoop(int.MinValue, int.MaxValue);
+            }
+
+            public void AgentStepLoop(int s, int e){
+                foreach (AbstractAgent a in agents)
+                {
+                    a.Step(s,e);
                 }
             }
 
@@ -37,7 +54,7 @@ namespace ABM
                 Init();
             }
 
-            void Update(){
+            void FixedUpdate(){
                 Step();
             }
         }

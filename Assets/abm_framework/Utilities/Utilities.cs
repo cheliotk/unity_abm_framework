@@ -17,5 +17,12 @@ namespace ABM
         }
 
         public delegate void Del();
+
+        public enum StepperQueueOrder
+        {
+            EARLY,
+            NORMAL,
+            LATE
+        }
     }
 }

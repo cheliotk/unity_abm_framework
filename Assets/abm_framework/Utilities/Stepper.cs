@@ -15,6 +15,17 @@ namespace ABM
                 }
             }
 
+            Utilities.StepperQueueOrder _stepperQueue;
+
+            public Utilities.StepperQueueOrder stepperQueue{
+                get{
+                    return _stepperQueue;
+                }
+                set{
+                    _stepperQueue = value;
+                }
+            }
+
             int _priority;
             public int priority{
                 get
@@ -43,10 +54,19 @@ namespace ABM
 
             Utilities.Del funcToCall;
             
-            public Stepper(int _stepValue, Utilities.Del callback, int _priorityValue = 100){
+            public Stepper(int _stepValue, Utilities.Del callback, int _priorityValue = 500){
                 step = _stepValue;
                 funcToCall = callback;
                 priority = _priorityValue;
+                if(priority < 333){
+                    stepperQueue = Utilities.StepperQueueOrder.EARLY;
+                }
+                else if (priority < 666){
+                    stepperQueue = Utilities.StepperQueueOrder.NORMAL;
+                }
+                else{
+                    stepperQueue = Utilities.StepperQueueOrder.LATE;
+                }
             }
         }
     }

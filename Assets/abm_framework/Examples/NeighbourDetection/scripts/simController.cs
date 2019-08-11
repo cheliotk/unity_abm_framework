@@ -25,4 +25,9 @@ public class simController : AbstractController
             bounds = new Bounds(Vector3.zero, new Vector3(100f,10f,100f));
         }
     }
+
+    public override void Step(){
+        AgentStepLoop(0,300);
+        AgentStepLoop(300,int.MaxValue);
+    }
 }

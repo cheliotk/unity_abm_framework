@@ -8,7 +8,7 @@
         using UnityEngine;
         public interface ISteppable
         {
-            // int step { get; set; }
+            void Step(int priorityS, int priorityE);
             void Step();
         }
     }
