@@ -41,6 +41,10 @@ public class BoidAgent : AbstractAgent
 
     Collider[] nearbyBoids;
 
+    public float distCovered = 0f;
+
+    float norm = 0.01f;
+
     public void Init(Bounds _bounds, Vector3 _pos, Quaternion _rot)
     {
         base.Init();
@@ -103,12 +107,17 @@ public class BoidAgent : AbstractAgent
         // Applys the rotation with interpolation.
         if (rotation != currentRotation)
         {
-            var ip = Mathf.Exp(-boidController.rotationCoeff * Time.deltaTime);
+            // var ip = Mathf.Exp(-boidController.rotationCoeff * Time.deltaTime);
+            var ip = Mathf.Exp(-boidController.rotationCoeff * norm);
             transform.rotation = Quaternion.Slerp(rotation, currentRotation, ip);
         }
 
+        Vector3 prevPos = this.transform.position;
         // Moves forawrd.
-        transform.position = currentPosition + transform.forward * (velocity * Time.deltaTime);
+        // transform.position = currentPosition + transform.forward * (velocity * Time.deltaTime);
+        transform.position = currentPosition + transform.forward * (velocity * norm);
+        distCovered += Vector3.Distance(this.transform.position,prevPos);
+        boidController.AgentReportDistCovered(distCovered);
     }
 
     // Caluculates the separation vector with a target.
@@ -125,7 +134,8 @@ public class BoidAgent : AbstractAgent
         if(!bounds.Contains(this.transform.position)){
             Vector3 fromCenterToHere = this.transform.position - bounds.center;
             this.transform.position = bounds.center - fromCenterToHere;
-            transform.position = this.transform.position + transform.forward * (velocity * Time.deltaTime);
+            // transform.position = this.transform.position + transform.forward * (velocity * Time.deltaTime);
+            transform.position = this.transform.position + transform.forward * (velocity * norm);
         }
     }
 }

@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
+
 using ABM.Core;
 using ABM;
 
@@ -32,6 +34,11 @@ public class BoidController : AbstractController
 {
     [Header("Sim Parameters")]
     public Bounds bounds;
+    public int endFrame = 5000;
+    public int frameCount = 0;
+    public int renderFrameCount = 0;
+
+    public float avgDistCovered = 0f;
 
     [Header("Boid Parameters")]
     public GameObject boidPrefab;
@@ -57,6 +64,9 @@ public class BoidController : AbstractController
     public override void Init()
     {
         base.Init();
+
+        frameCount = 0;
+
         for (var i = 0; i < spawnCount; i++) {
             Vector3 pos = Utilities.RandomPointInBounds(bounds);
             GameObject boid = Spawn();
@@ -64,10 +74,22 @@ public class BoidController : AbstractController
         }
     }
 
-    // public override void Step(){
-    //     AgentStepLoop(0, 500);
-    //     AgentStepLoop(500, int.MaxValue);
-    // }
+    public override void Step(){
+        if(frameCount > endFrame){
+            return;
+        }
+        PauseAtFrame();
+
+        frameCount ++;
+        renderFrameCount = Time.frameCount;
+        avgDistCovered = 0f;
+
+        base.Step();
+        // AgentStepLoop(0, 500);
+        // AgentStepLoop(500, int.MaxValue);
+
+        avgDistCovered /= agents.Count;
+    }
 
     [ExecuteInEditMode]
     private void OnDrawGizmos() {
@@ -89,5 +111,18 @@ public class BoidController : AbstractController
         var rotation = Quaternion.Slerp(transform.rotation, Random.rotation, 0.3f);
         var boid = Instantiate(boidPrefab, position, rotation) as GameObject;
         return boid;
+    }
+
+    void PauseAtFrame(){
+        #if UNITY_EDITOR
+            if(frameCount >= endFrame){
+                Debug.Log(Time.fixedDeltaTime + " | " + avgDistCovered + " | " + Time.realtimeSinceStartup);
+                EditorApplication.isPaused = true;
+            }
+        #endif
+    }
+
+    public void AgentReportDistCovered(float d){
+        avgDistCovered += d;
     }
 }
