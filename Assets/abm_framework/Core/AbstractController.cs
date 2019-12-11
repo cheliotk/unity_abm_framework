@@ -10,7 +10,7 @@ namespace ABM
                 get{
                     return _agents;
                 }
-                set{
+                private set{
                     _agents = value;
                 }
             }
@@ -31,9 +31,15 @@ namespace ABM
             }
 
             public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
-                foreach (AbstractAgent a in agents){
-                    a.Step();
+                if(Time.frameCount - simStartTime <=0){
+                    return;
                 }
+
+                AgentStepLoop(priorityS, priorityE);
+                
+                // foreach (AbstractAgent a in agents){
+                //     a.Step();
+                // }
             }
 
             public virtual void Step(){
@@ -44,7 +50,10 @@ namespace ABM
             }
 
             public void AgentStepLoop(int s, int e){
-                foreach (AbstractAgent a in agents)
+                
+                var agentsFiltered = agents.FindAll(a => a.HasSteppersInPriorityRange(s, e));
+
+                foreach (AbstractAgent a in agentsFiltered)
                 {
                     a.Step(s,e);
                 }
@@ -54,7 +63,7 @@ namespace ABM
                 Init();
             }
 
-            void FixedUpdate(){
+            void Update(){
                 Step();
             }
         }

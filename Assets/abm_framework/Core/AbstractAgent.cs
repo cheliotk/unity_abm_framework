@@ -11,8 +11,18 @@ namespace ABM
                 get{
                     return _steppers;
                 }
-                set{
+                private set{
                     _steppers = value;
+                }
+            }
+
+            List<int> _steppersPriorityList;
+            public List<int> steppersPriorityList{
+                get{
+                    return _steppersPriorityList;
+                }
+                private set{
+                    _steppersPriorityList = value;
                 }
             }
 
@@ -30,6 +40,7 @@ namespace ABM
 
             public virtual void Init(){
                 _steppers = new List<Stepper>();
+                _steppersPriorityList = new List<int>();
             }
 
             public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
@@ -52,11 +63,44 @@ namespace ABM
             public void RegisterStepper(Stepper s){
                 _steppers.Add(s);
                 _steppers.Sort();
+                ResetSteppersPriorityList();
+            }
+
+            public void DeregisterStepper(Stepper s){
+                _steppers.Remove(s);
+                _steppers.Sort();
+                ResetSteppersPriorityList();
             }
 
             public void CreateStepper(int _stepValue, Utilities.Del callback, int _priorityValue = 100){
                 Stepper s = new Stepper(_stepValue, callback, _priorityValue);
                 RegisterStepper(s);
+            }
+
+            public void DestroyStepper(Stepper s){
+                DeregisterStepper(s);
+                s = null;
+            }
+
+            void ResetSteppersPriorityList(){
+                _steppersPriorityList = new List<int>();
+                for (int i = 0; i < steppers.Count; i++)
+                {
+                    Stepper s = steppers[i];
+                    if (!_steppersPriorityList.Contains(s.priority)){
+                        _steppersPriorityList.Add(s.priority);
+                    }
+                }
+            }
+
+            public bool HasSteppersInPriorityRange(int priorityS, int priorityE){
+                foreach (int p in steppersPriorityList)
+                {
+                    if(p >= priorityS && p < priorityE){
+                        return true;
+                    }
+                }
+                return false;
             }
         }
     }
