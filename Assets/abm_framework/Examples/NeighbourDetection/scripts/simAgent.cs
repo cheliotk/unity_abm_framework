@@ -5,7 +5,7 @@ using ABM.Core;
 
 public class simAgent : AbstractAgent
 {
-    public void Init(Vector3 _pos, Bounds _bounds, float _speed = 1.5f){
+    public void Init(Vector3 _pos, Bounds _bounds, float _speed = 1.5f, float _angle = 90f, float _viewRange = 25f){
         base.Init();
 
         Vector3 pos = _pos;
@@ -13,12 +13,17 @@ public class simAgent : AbstractAgent
         this.transform.position = pos;
 
         speed = _speed;
+        angle = _angle;
+        viewRange = _viewRange;
+
         bounds = _bounds;
 
-        CreateStepper(3, Move, 100);
-        CreateStepper(1, Look, 500);
-        CreateStepper(1, Mark, 600);
-        CreateStepper(3, CheckOutOfBounds, 200);
+        // CreateStepper(3, Move, 100);
+        // CreateStepper(1, Look, 500);
+        // CreateStepper(1, Mark, 600);
+        // CreateStepper(3, CheckOutOfBounds, 200);
+
+        CreateStepper(1, BehaviourQueue);
     }
 
     [Range(1f,180f)]
@@ -32,8 +37,15 @@ public class simAgent : AbstractAgent
     Bounds bounds;
     public bool isOutOfBounds = false;
 
+    void BehaviourQueue(){
+        Move();
+        CheckOutOfBounds();
+        Look();
+        Mark();
+    }
+
     void Move(){
-        this.transform.RotateAround(this.transform.position, Vector3.up, Random.Range(-angle,angle));
+        this.transform.RotateAround(this.transform.position, Vector3.up, Random.Range(-angle/2f,angle/2f));
 
         float _speed = speed;
         if(agentsVisible != null){
@@ -48,9 +60,15 @@ public class simAgent : AbstractAgent
 
     void Mark(){
         if(agentsVisible != null){
-            foreach(Collider c in agentsVisible){
+            foreach(BoxCollider c in agentsVisible){
                 Debug.DrawLine(this.transform.position, c.transform.position);
             }
+            this.transform.localScale = Vector3.one * agentsVisible.Length;
+            GetComponent<BoxCollider>().size = Vector3.one/(float)agentsVisible.Length;
+        }
+        else{
+            this.transform.localScale = Vector3.one;
+            GetComponent<BoxCollider>().size = Vector3.one;
         }
     }
 

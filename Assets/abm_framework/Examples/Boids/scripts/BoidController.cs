@@ -84,9 +84,9 @@ public class BoidController : AbstractController
         renderFrameCount = Time.frameCount;
         avgDistCovered = 0f;
 
-        base.Step();
-        // AgentStepLoop(0, 500);
-        // AgentStepLoop(500, int.MaxValue);
+        // base.Step();
+        AgentStepLoop(0, 500);
+        AgentStepLoop(500, int.MaxValue);
 
         avgDistCovered /= agents.Count;
     }

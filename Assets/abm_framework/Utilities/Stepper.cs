@@ -28,7 +28,7 @@ namespace ABM
                     return _name;
                 }
             }
-
+            
             Utilities.StepperQueueOrder _stepperQueue;
 
             public Utilities.StepperQueueOrder stepperQueue{

@@ -30,6 +30,13 @@ namespace ABM
                 simStartTime = Time.frameCount;
             }
 
+            public virtual void Step(){
+                if(Time.frameCount - simStartTime < 0){
+                    return;
+                }
+                AgentStepLoop(int.MinValue, int.MaxValue);
+            }
+
             public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
                 if(Time.frameCount - simStartTime < 0){
                     return;
@@ -38,11 +45,12 @@ namespace ABM
                 AgentStepLoop(priorityS, priorityE);
             }
 
-            public virtual void Step(){
+            public virtual void Step(Utilities.StepperQueueOrder stepperQueuePrompt){
                 if(Time.frameCount - simStartTime < 0){
                     return;
                 }
-                AgentStepLoop(int.MinValue, int.MaxValue);
+
+                AgentStepLoop(stepperQueuePrompt);
             }
 
             public void AgentStepLoop(int s, int e){
@@ -52,6 +60,16 @@ namespace ABM
                 foreach (AbstractAgent a in agentsFiltered)
                 {
                     a.Step(s,e);
+                }
+            }
+
+            public void AgentStepLoop(Utilities.StepperQueueOrder stepperQueuePrompt){
+                
+                var agentsFiltered = agents.FindAll(a => a.HasSteppersInQueue(stepperQueuePrompt));
+
+                foreach (AbstractAgent a in agentsFiltered)
+                {
+                    a.Step(stepperQueuePrompt);
                 }
             }
 

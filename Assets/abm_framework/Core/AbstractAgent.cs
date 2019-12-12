@@ -27,6 +27,16 @@ namespace ABM
                 }
             }
 
+            List<Utilities.StepperQueueOrder> _steppersQueueList;
+            public List<Utilities.StepperQueueOrder> steppersQueueList{
+                get{
+                    return _steppersQueueList;
+                }
+                private set{
+                    _steppersQueueList = value;
+                }
+            }
+
             AbstractController _controller;
             public AbstractController controller{
                 get{
@@ -44,21 +54,29 @@ namespace ABM
                 _steppersPriorityList = new List<int>();
             }
 
-            public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
-                
-                var steppersFiltered = steppers.FindAll(s => s.priority >= priorityS && s.priority < priorityE);
-                steppersFiltered.Sort();
+            public virtual void Step(){
+                Step(int.MinValue, int.MaxValue);
+            }
 
-                foreach (Stepper s in steppersFiltered)
+            public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
+                var steppersFiltered = steppers.FindAll(s => s.priority >= priorityS && s.priority < priorityE);
+                StepSteppers(steppersFiltered);
+            }
+
+            public virtual void Step(Utilities.StepperQueueOrder stepperQueuePrompt){
+                var steppersFiltered = steppers.FindAll(s => s.stepperQueue == stepperQueuePrompt);
+                StepSteppers(steppersFiltered);
+            }
+
+            void StepSteppers(List<Stepper> steppers){
+                steppers.Sort();
+
+                foreach (Stepper s in steppers)
                 {
                     if((s.startFrame + Time.frameCount) % s.step == 0 || s.startFrame == Time.frameCount){
                         s.Step();
                     }
                 }
-            }
-
-            public virtual void Step(){
-                Step(int.MinValue, int.MaxValue);
             }
 
             public void RegisterStepper(Stepper s){
@@ -99,11 +117,16 @@ namespace ABM
 
             void ResetSteppersPriorityList(){
                 _steppersPriorityList = new List<int>();
+                _steppersQueueList = new List<Utilities.StepperQueueOrder>();
                 for (int i = 0; i < steppers.Count; i++)
                 {
                     Stepper s = steppers[i];
                     if (!_steppersPriorityList.Contains(s.priority)){
                         _steppersPriorityList.Add(s.priority);
+                    }
+
+                    if(!_steppersQueueList.Contains(s.stepperQueue)){
+                        _steppersQueueList.Add(s.stepperQueue);
                     }
                 }
             }
@@ -112,6 +135,16 @@ namespace ABM
                 foreach (int p in steppersPriorityList)
                 {
                     if(p >= priorityS && p < priorityE){
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public bool HasSteppersInQueue(Utilities.StepperQueueOrder stepperQueuePrompt){
+                foreach (var stepperQ in steppersQueueList)
+                {
+                    if(stepperQ == stepperQueuePrompt){
                         return true;
                     }
                 }

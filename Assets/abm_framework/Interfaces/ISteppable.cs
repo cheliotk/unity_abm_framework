@@ -8,6 +8,7 @@
         using UnityEngine;
         public interface ISteppable
         {
+            void Step(ABM.Utilities.StepperQueueOrder stepperQueuePrompt);
             void Step(int priorityS, int priorityE);
             void Step();
         }
