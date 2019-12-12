@@ -31,19 +31,15 @@ namespace ABM
             }
 
             public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
-                if(Time.frameCount - simStartTime <=0){
+                if(Time.frameCount - simStartTime < 0){
                     return;
                 }
 
                 AgentStepLoop(priorityS, priorityE);
-                
-                // foreach (AbstractAgent a in agents){
-                //     a.Step();
-                // }
             }
 
             public virtual void Step(){
-                if(Time.frameCount - simStartTime <=0){
+                if(Time.frameCount - simStartTime < 0){
                     return;
                 }
                 AgentStepLoop(int.MinValue, int.MaxValue);
@@ -63,7 +59,7 @@ namespace ABM
                 Init();
             }
 
-            void Update(){
+            void LateUpdate(){
                 Step();
             }
         }

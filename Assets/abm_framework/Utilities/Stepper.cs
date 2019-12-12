@@ -3,7 +3,9 @@ namespace ABM
     namespace Core
     {
         using System;
+        using UnityEngine;
         public class Stepper: IComparable<Stepper>{
+            Utilities.Del funcToCall;
             int _step;
             public int step{
                 get
@@ -12,6 +14,18 @@ namespace ABM
                 }
                 set{
                     _step = value;
+                }
+            }
+            int _startFrame;
+            public int startFrame{
+                get{
+                    return _startFrame;
+                }
+            }
+            string _name;
+            public string name{
+                get{
+                    return _name;
                 }
             }
 
@@ -51,13 +65,13 @@ namespace ABM
             public virtual void Step(){
                     funcToCall();
             }
-
-            Utilities.Del funcToCall;
             
             public Stepper(int _stepValue, Utilities.Del callback, int _priorityValue = 500){
                 step = _stepValue;
                 funcToCall = callback;
                 priority = _priorityValue;
+                _name = callback.Method.Name;
+                _startFrame = Time.frameCount;
                 if(priority < 333){
                     stepperQueue = Utilities.StepperQueueOrder.EARLY;
                 }

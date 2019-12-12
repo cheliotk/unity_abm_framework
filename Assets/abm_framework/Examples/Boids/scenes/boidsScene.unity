@@ -144,8 +144,12 @@ MonoBehaviour:
   bounds:
     m_Center: {x: 0, y: 50, z: 0}
     m_Extent: {x: 50, y: 50, z: 50}
+  endFrame: 5000
+  frameCount: 0
+  renderFrameCount: 0
+  avgDistCovered: 0
   boidPrefab: {fileID: 100000, guid: 61cb286d91ac1b34091c3e0bd55d779e, type: 3}
-  spawnCount: 100
+  spawnCount: 300
   spawnRadius: 11.57
   velocity: 15.8
   velocityVariation: 0
@@ -334,7 +338,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.28915986, g: 0.31612182, b: 0.3584906, a: 0}
+  m_BackGroundColor: {r: 0.15396936, g: 0.16826165, b: 0.18867922, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}

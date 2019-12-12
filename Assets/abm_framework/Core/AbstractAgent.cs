@@ -2,6 +2,7 @@ namespace ABM
 {
     namespace Core
     {
+        using System.Collections;
         using System.Collections.Generic;
         using UnityEngine;
         public class AbstractAgent : MonoBehaviour, ISteppable, IInitializable
@@ -50,7 +51,7 @@ namespace ABM
 
                 foreach (Stepper s in steppersFiltered)
                 {
-                    if(Time.frameCount % s.step == 0){
+                    if((s.startFrame + Time.frameCount) % s.step == 0 || s.startFrame == Time.frameCount){
                         s.Step();
                     }
                 }
@@ -72,7 +73,21 @@ namespace ABM
                 ResetSteppersPriorityList();
             }
 
-            public void CreateStepper(int _stepValue, Utilities.Del callback, int _priorityValue = 100){
+            public void CreateStepper(int _stepValue, Utilities.Del callback, int _priorityValue = 100, int _delayFrames = 0){
+                if(_delayFrames == 0){
+                    Stepper s = new Stepper(_stepValue, callback, _priorityValue);
+                    RegisterStepper(s);
+                }
+                else{
+                    StartCoroutine(CreateStepperAfterFrames(_delayFrames,_stepValue, callback, _priorityValue));
+                }
+            }
+
+            IEnumerator CreateStepperAfterFrames(int _delayFrames, int _stepValue, Utilities.Del callback, int _priorityValue){
+                int frameToRegisterOn = Time.frameCount + _delayFrames;
+                while(Time.frameCount < frameToRegisterOn){
+                    yield return null;
+                }
                 Stepper s = new Stepper(_stepValue, callback, _priorityValue);
                 RegisterStepper(s);
             }

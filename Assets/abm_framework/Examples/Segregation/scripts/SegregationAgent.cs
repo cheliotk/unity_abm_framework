@@ -11,6 +11,7 @@ public class SegregationAgent : AbstractAgent
     public List<SegregationAgent> neighbours;
     cellScript currentCell;
     bool needToMove = false;
+    
     public void Init(cellScript cell){
         base.Init();
         segController = GameObject.FindObjectOfType<SegregationController>();
@@ -18,6 +19,7 @@ public class SegregationAgent : AbstractAgent
         currentCell = cell;
         this.transform.position = cell.transform.position;
         currentCell.isOccupied = true;
+        currentCell.occupier = this;
 
         this.transform.localScale = Vector3.one * segController.cellSizeInGameWorld;
 
@@ -33,28 +35,34 @@ public class SegregationAgent : AbstractAgent
             GetComponent<Renderer>().material.color = Color.green;
         }
 
-        neighbours = new List<SegregationAgent>();
-
-        CreateStepper(1, FindNeighbours, 100);
-        CreateStepper(1, CheckNeighbourhoodIsOK, 200);
-        CreateStepper(1, Move, 300);
+        CreateStepper(2, FindNeighbours, 100);
+        CreateStepper(2, CheckNeighbourhoodIsOK, 200);
+        CreateStepper(2, Move, 300, 1);
     }
 
     void FindNeighbours(){
-        Collider[] others = Physics.OverlapBox(this.transform.transform.position, Vector3.one*segController.cellSizeInGameWorld,Quaternion.identity,segController.agentLm);
-        
         neighbours = new List<SegregationAgent>();
-        
-        foreach (Collider other in others)
+
+        foreach (var cell in currentCell.neighbours)
         {
-            if(other.gameObject != this.gameObject){
-                neighbours.Add(other.GetComponent<SegregationAgent>());
+            if(cell.occupier){
+                neighbours.Add(cell.occupier);
             }
         }
     }
 
     void CheckNeighbourhoodIsOK(){
         needToMove = IsNeighbourhoodOK();
+
+        Color c = GetComponent<Renderer>().material.color;
+        
+        if (needToMove){
+            c.a = 1.0f;
+        }
+        else{
+            c.a = 0.2f;
+        }
+        GetComponent<Renderer>().material.color = c;
     }
 
     bool IsNeighbourhoodOK(){
@@ -81,20 +89,22 @@ public class SegregationAgent : AbstractAgent
     }
 
     void Move(){
-        Color c = GetComponent<Renderer>().material.color;
         if(needToMove){
             cellScript newCell = segController.FindFreeCell();
+            
             currentCell.isOccupied = false;
+            currentCell.occupier = null;
+
             this.transform.position = newCell.transform.position;
+
             currentCell = newCell;
             currentCell.isOccupied = true;
-            c.a = 1.0f;
-        }
-        else{
-            c.a = 0.2f;
-        }
+            currentCell.occupier = this;
 
-        GetComponent<Renderer>().material.color = c;
+            Color c = GetComponent<Renderer>().material.color;
+            c.a = 0.6f;
+            GetComponent<Renderer>().material.color = c;
+        }
     }
 }
 
