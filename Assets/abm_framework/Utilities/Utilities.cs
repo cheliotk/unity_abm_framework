@@ -22,6 +22,28 @@
             );
         }
         
+        /// <summary>
+        /// no args
+        /// </summary>
         public delegate void Del();
+        
+        /// <summary>
+        /// 1 args
+        /// </summary>
+        /// <param name="arg">first arg</param>
+        /// <typeparam name="T">var type</typeparam>
+        /// <returns></returns>
+        public delegate void Del<in T>(T arg);
+        
+        /// <summary>
+        /// 2 args
+        /// </summary>
+        /// <param name="arg1">arg 1</param>
+        /// <param name="arg2">arg 2</param>
+        /// <typeparam name="T1">arg1 Type</typeparam>
+        /// <typeparam name="T2">arg2 Type</typeparam>
+        /// <returns></returns>
+        public delegate void Del<in T1, in T2>(T1 arg1, T2 arg2);
+        // public delegate TResult Func<in T1, out TResult>(T1 arg);
     }
 }
