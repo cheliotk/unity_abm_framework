@@ -18,11 +18,6 @@ public class simAgent : AbstractAgent
 
         bounds = _bounds;
 
-        // CreateStepper(3, Move, 100);
-        // CreateStepper(1, Look, 500);
-        // CreateStepper(1, Mark, 600);
-        // CreateStepper(3, CheckOutOfBounds, 200);
-
         CreateStepper(1, BehaviourQueue);
     }
 

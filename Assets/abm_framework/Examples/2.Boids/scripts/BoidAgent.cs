@@ -27,6 +27,7 @@ using UnityEngine;
 using UnityEditor;
 
 using ABM.Core;
+using ABM;
 
 public class BoidAgent : AbstractAgent
 {
@@ -55,9 +56,9 @@ public class BoidAgent : AbstractAgent
         this.transform.position = _pos;
         this.transform.rotation = _rot;
 
-        CreateStepper(1, BoidBehaviourFindNeighbours, 100);
-        CreateStepper(1, BoidBehaviourMove, 500);
-        CreateStepper(1, CheckOutOfBounds, 600);
+        CreateStepper(1, BoidBehaviourFindNeighbours, Stepper.StepperQueueOrder.EARLY);
+        CreateStepper(1, BoidBehaviourMove, Stepper.StepperQueueOrder.NORMAL);
+        CreateStepper(1, CheckOutOfBounds, Stepper.StepperQueueOrder.LATE);
     }
 
     void BoidBehaviourFindNeighbours(){

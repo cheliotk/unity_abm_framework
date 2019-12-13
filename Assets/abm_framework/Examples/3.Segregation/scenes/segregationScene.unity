@@ -240,7 +240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentCellPf: {fileID: 5457209898911150162, guid: bed06f8757087e94cb7b76870e44aa1e,
     type: 3}
-  environmentExtents: {x: 13, y: 1, z: 13}
+  environmentExtents: {x: 10, y: 10, z: 10}
   cells: []
   cellSizeInGameWorld: 20
   agentPf: {fileID: 5566055300717348028, guid: 7c28ef79bc8965f4a92608914eacb863, type: 3}
@@ -250,7 +250,7 @@ MonoBehaviour:
   cellLm:
     serializedVersion: 2
     m_Bits: 1024
-  similarityThreshold: 0.4
+  similarityThreshold: 0.3
   agentPopulationPerc: 0.8
 --- !u!1 &1499901974
 GameObject:

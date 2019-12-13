@@ -34,15 +34,9 @@ public class simController : AbstractController
             GameObject a = Instantiate(agentPrefab);
 
             Vector3 pos = Utilities.RandomPointInBounds(bounds);
-            // float speed = RandomFromDistribution.RandomRangeNormalDistribution(1f,3f,RandomFromDistribution.ConfidenceLevel_e._999);
-
+            
             simAgent ascript = a.GetComponent<simAgent>();
             ascript.Init(pos, bounds, speed, rotationAngle, viewRange);
         }
     }
-
-    // public override void Step(){
-    //     AgentStepLoop(0,300);
-    //     AgentStepLoop(300,int.MaxValue);
-    // }
 }

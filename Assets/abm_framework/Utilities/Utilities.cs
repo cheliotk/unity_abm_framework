@@ -3,7 +3,17 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+
+    /// <summary>
+    /// Utilities class, bit sparse at the moment, currently is mainly used as a dumping site for useful/frequently used code that does not 100% fit in other classes.
+    /// </summary>
     public class Utilities: MonoBehaviour{
+
+        /// <summary>
+        /// Returns a random point in a given AABB
+        /// </summary>
+        /// <param name="bounds">The axis-aligned bounding box (AABB) to generate a point in</param>
+        /// <returns>Vector3 point</returns>
         public static Vector3 RandomPointInBounds(Bounds bounds) {
             return new Vector3(
                 Random.Range(bounds.min.x, bounds.max.x),
@@ -11,14 +21,7 @@
                 Random.Range(bounds.min.z, bounds.max.z)
             );
         }
-
+        
         public delegate void Del();
-
-        public enum StepperQueueOrder
-        {
-            EARLY,
-            NORMAL,
-            LATE
-        }
     }
 }

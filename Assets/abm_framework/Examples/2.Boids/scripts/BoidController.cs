@@ -60,7 +60,7 @@ public class BoidController : AbstractController
     public float neighborDist = 2.0f;
 
     public LayerMask searchLayer;
-
+    
     public override void Init()
     {
         base.Init();
@@ -84,9 +84,9 @@ public class BoidController : AbstractController
         renderFrameCount = Time.frameCount;
         avgDistCovered = 0f;
 
-        // base.Step();
-        AgentStepLoop(0, 500);
-        AgentStepLoop(500, int.MaxValue);
+        Step(Stepper.StepperQueueOrder.EARLY);
+        Step(Stepper.StepperQueueOrder.NORMAL);
+        Step(Stepper.StepperQueueOrder.LATE);
 
         avgDistCovered /= agents.Count;
     }
@@ -103,14 +103,7 @@ public class BoidController : AbstractController
 
     public GameObject Spawn()
     {
-        return Spawn(transform.position + Random.insideUnitSphere * spawnRadius);
-    }
-
-    public GameObject Spawn(Vector3 position)
-    {
-        var rotation = Quaternion.Slerp(transform.rotation, Random.rotation, 0.3f);
-        var boid = Instantiate(boidPrefab, position, rotation) as GameObject;
-        return boid;
+        return Instantiate(boidPrefab);
     }
 
     void PauseAtFrame(){
