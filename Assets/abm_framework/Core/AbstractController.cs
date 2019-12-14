@@ -14,6 +14,9 @@ namespace ABM
         /// Abstract controller class. To be used as a blueprint for simulation-specific controllers. A simulation-specific controller should inherit from this class
         /// </summary>
         public class AbstractController : MonoBehaviour, ISteppable, IInitializable{
+
+            AbstractScheduler scheduler;
+
             /// <summary>
             /// A register of all agents currently in the simulation
             /// </summary>
@@ -54,6 +57,8 @@ namespace ABM
             public virtual void Init(){
                 _agents = new List<AbstractAgent>();
                 simStartTime = Time.frameCount;
+                scheduler = GameObject.FindObjectOfType<AbstractScheduler>();
+                scheduler.Init();
             }
 
             /// <summary>
@@ -63,7 +68,9 @@ namespace ABM
                 if(Time.frameCount - simStartTime < 0){
                     return;
                 }
-                AgentStepLoop(int.MinValue, int.MaxValue);
+                
+                scheduler.Tick();
+                // AgentStepLoop(int.MinValue, int.MaxValue);
             }
 
             /// <summary>

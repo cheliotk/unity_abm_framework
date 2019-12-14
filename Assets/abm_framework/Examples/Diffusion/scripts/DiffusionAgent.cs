@@ -19,9 +19,9 @@ public class DiffusionAgent : AbstractAgent
         value = startingValue;
         Draw();
 
-        CreateStepper(1, FindNeighbours, 100);
-        CreateStepper(1, CalculateNewValue, 200);
-        CreateStepper(1, Draw, 300);
+        CreateStepper(FindNeighbours, 1, 100);
+        CreateStepper(CalculateNewValue, 1, 200);
+        CreateStepper(Draw, 1, 300);
 
     }
 

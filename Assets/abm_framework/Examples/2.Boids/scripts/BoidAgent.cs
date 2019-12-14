@@ -56,9 +56,9 @@ public class BoidAgent : AbstractAgent
         this.transform.position = _pos;
         this.transform.rotation = _rot;
 
-        CreateStepper(1, BoidBehaviourFindNeighbours, Stepper.StepperQueueOrder.EARLY);
-        CreateStepper(1, BoidBehaviourMove, Stepper.StepperQueueOrder.NORMAL);
-        CreateStepper(1, CheckOutOfBounds, Stepper.StepperQueueOrder.LATE);
+        CreateStepper(BoidBehaviourFindNeighbours, 1, Stepper.StepperQueueOrder.EARLY);
+        CreateStepper(BoidBehaviourMove, 1, Stepper.StepperQueueOrder.NORMAL);
+        CreateStepper(CheckOutOfBounds, 1, Stepper.StepperQueueOrder.LATE);
     }
 
     void BoidBehaviourFindNeighbours(){

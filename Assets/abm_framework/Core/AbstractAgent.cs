@@ -117,6 +117,7 @@ namespace ABM
                 _steppers.Add(s);
                 _steppers.Sort();
                 ResetSteppersPriorityList();
+                GameObject.FindObjectOfType<AbstractScheduler>().RegisterStepper(s);
             }
 
             /// <summary>
@@ -132,24 +133,57 @@ namespace ABM
             /// <summary>
             /// Creates a stepper
             /// </summary>
-            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
             /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
-            public void CreateStepper(int _stepValue,
-                            Utilities.Del callback){
-                CreateStepper(_stepValue, callback, 500);
+            public void CreateStepper(Utilities.Del callback){
+                CreateStepper(callback, 1, 500, 0);
             }
 
             /// <summary>
             /// Creates a stepper
             /// </summary>
-            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
             /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
+            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
+            public void CreateStepper(Utilities.Del callback,
+                            int _stepValue){
+                CreateStepper(callback, _stepValue, 500, 0);
+            }
+
+            /// <summary>
+            /// Creates a stepper
+            /// </summary>
+            /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
+            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
+            /// <param name="_priorityValue">Where to place the stepper in the scheduler queue, using priority values (soft range 0-1000, lower is earlier)</param>
+            public void CreateStepper(Utilities.Del callback,
+                            int _stepValue,
+                            int _priorityValue){
+                CreateStepper(callback, _stepValue, _priorityValue, 0);
+            }
+            
+            /// <summary>
+            /// Creates a stepper
+            /// </summary>
+            /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
+            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
+            /// <param name="_stepperQueuePrompt">Where to place the stepper in the scheduler queue, using StepperQueueOrder values (EARLY, NORMAL, LATE) (default = NORMAL)</param>
+            public void CreateStepper(Utilities.Del callback,
+                            int _stepValue,
+                            Stepper.StepperQueueOrder _stepperQueuePrompt){
+                CreateStepper(callback, _stepValue, _stepperQueuePrompt, 0);
+            }
+
+            /// <summary>
+            /// Creates a stepper
+            /// </summary>
+            /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
+            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
             /// <param name="_priorityValue">Where to place the stepper in the scheduler queue, using priority values (soft range 0-1000, lower is earlier)</param>
             /// <param name="_delayStartByFrames">The number of frames to delay stepper registration by (default = 0)</param>
-            public void CreateStepper(int _stepValue,
-                            Utilities.Del callback,
+            public void CreateStepper(Utilities.Del callback,
+                            int _stepValue = 1,
                             int _priorityValue = 500,
                             int _delayStartByFrames = 0){
+                
                 if(_delayStartByFrames == 0){
                     Stepper s = new Stepper(_stepValue, callback, _priorityValue);
                     RegisterStepper(s);
@@ -162,14 +196,15 @@ namespace ABM
             /// <summary>
             /// Creates a stepper
             /// </summary>
-            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
             /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
+            /// <param name="_stepValue">The stepper execution frequency, in positive integer values (min = default = 1)</param>
             /// <param name="_stepperQueuePrompt">Where to place the stepper in the scheduler queue, using StepperQueueOrder values (EARLY, NORMAL, LATE) (default = NORMAL)</param>
             /// <param name="_delayStartByFrames">The number of frames to delay stepper registration by (default = 0)</param>
-            public void CreateStepper(int _stepValue,
-                            Utilities.Del callback,
+            public void CreateStepper(Utilities.Del callback,
+                            int _stepValue = 1,
                             Stepper.StepperQueueOrder _stepperQueuePrompt = Stepper.StepperQueueOrder.NORMAL,
                             int _delayStartByFrames = 0){
+                
                 if(_delayStartByFrames == 0){
                     Stepper s = new Stepper(_stepValue, callback, _stepperQueuePrompt);
                     RegisterStepper(s);

@@ -35,9 +35,9 @@ public class SegregationAgent : AbstractAgent
             GetComponent<Renderer>().material.color = Color.green;
         }
 
-        CreateStepper(2, FindNeighbours, 100);
-        CreateStepper(2, CheckNeighbourhoodIsOK, 200);
-        CreateStepper(2, Move, 300, 1);
+        CreateStepper(FindNeighbours, 2, 100);
+        CreateStepper(CheckNeighbourhoodIsOK, 2, 200);
+        CreateStepper(Move, 2, 300, 1);
     }
 
     void FindNeighbours(){
