@@ -4,7 +4,7 @@ using UnityEngine;
 
 using ABM.Core;
 using ABM;
-public class AbstractScheduler : MonoBehaviour, ISchedulable, IInitializable
+public class AbstractScheduler : ISchedulable, IInitializable
 {
     /*
     Stepper Dictionary structure
@@ -16,8 +16,6 @@ public class AbstractScheduler : MonoBehaviour, ISchedulable, IInitializable
     */
     Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper>>>> steppers;
     public virtual void Init(){
-        // Dictionary<int, Stepper> steppers_step = new Dictionary<int, Stepper>();
-        // Dictionary<int, Dictionary<int, Stepper>> steppers_pval = new Dictionary<int, Dictionary<int, Stepper>>();
         steppers = new Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper> >>>();
     }
 
@@ -48,67 +46,84 @@ public class AbstractScheduler : MonoBehaviour, ISchedulable, IInitializable
         }
     }
 
+    public void DeregisterStepper(Stepper s){
+        Dictionary<int, List<Stepper>> steppersTemp = new Dictionary<int, List<Stepper>>(steppers[s.stepperQueue][s.priority]);
+        foreach (int k in steppers[s.stepperQueue][s.priority].Keys)
+        {
+            if(steppers[s.stepperQueue][s.priority][k].Contains(s)){
+                steppersTemp[k].Remove(s);                
+                break;
+            }
+        }
+        steppers[s.stepperQueue][s.priority] = new Dictionary<int, List<Stepper>>(steppersTemp);
+    }
+
     public void RegisterFutureStepper(Stepper s){
         Dictionary<int, Dictionary<int, List<Stepper>>> steppers_pval;
         if(steppers.TryGetValue(s.stepperQueue, out steppers_pval)){
             Dictionary<int, List<Stepper>> steppers_step;
             if(steppers_pval.TryGetValue(s.priority, out steppers_step)){
-                if(steppers_step.ContainsKey(s.step)){
-                    steppers_step[s.step].Add(s);
+                if(steppers_step.ContainsKey(s.step-1)){
+                    steppers_step[s.step-1].Add(s);
                 }
                 else{
-                    steppers_step.Add(s.step, new List<Stepper>());
-                    steppers_step[s.step].Add(s);
+                    steppers_step.Add(s.step-1, new List<Stepper>());
+                    steppers_step[s.step-1].Add(s);
                 }
             }
             else{
                 steppers_pval.Add(s.priority, new Dictionary<int, List<Stepper>>());
-                steppers_pval[s.priority].Add(s.step, new List<Stepper>());
-                steppers_pval[s.priority][s.step].Add(s);
+                steppers_pval[s.priority].Add(s.step-1, new List<Stepper>());
+                steppers_pval[s.priority][s.step-1].Add(s);
             }
         }
         else{
             steppers.Add(s.stepperQueue, new Dictionary<int, Dictionary<int, List<Stepper>>>());
             steppers[s.stepperQueue].Add(s.priority, new Dictionary<int, List<Stepper>>());
-            steppers[s.stepperQueue][s.priority].Add(s.step, new List<Stepper>());
-            steppers[s.stepperQueue][s.priority][s.step].Add(s);
+            steppers[s.stepperQueue][s.priority].Add(s.step-1, new List<Stepper>());
+            steppers[s.stepperQueue][s.priority][s.step-1].Add(s);
         }
     }
 
-    /*
-    TODO: Something's buggered here:
-        InvalidOperationException: Collection was modified; enumeration operation may not execute.
-        System.Collections.Generic.Dictionary`2+KeyCollection+Enumerator[TKey,TValue].MoveNext () (at <ac823e2bb42b41bda67924a45a0173c3>:0)
-        AbstractScheduler.AdvanceSchedulerTick () (at Assets/abm_framework/Core/AbstractScheduler.cs:86)
-        AbstractScheduler.Tick () (at Assets/abm_framework/Core/AbstractScheduler.cs:122)
-        ABM.Core.AbstractController.Step () (at Assets/abm_framework/Core/AbstractController.cs:72)
-        ABM.Core.AbstractController.LateUpdate () (at Assets/abm_framework/Core/AbstractController.cs:141)
-        UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr)
-    */
     void AdvanceSchedulerTick(){
-        var bob = steppers;
+        Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper>>>> bob;
+        bob = new Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper>>>>(steppers);
         foreach (var stepperQ in steppers.Keys)
         {
+            bob[stepperQ] = new Dictionary<int, Dictionary<int, List<Stepper>>>(steppers[stepperQ]);
             foreach (int stepperP in steppers[stepperQ].Keys)
             {
-                List<Stepper> steppersAt0 = new List<Stepper>();
                 int stepper_S = -1;
+                bob[stepperQ][stepperP] = new Dictionary<int, List<Stepper>>(steppers[stepperQ][stepperP]);
                 foreach (int stepperS in steppers[stepperQ][stepperP].Keys)
                 {
-                    if(stepperS == 0){
-                        steppersAt0 = steppers[stepperQ][stepperP][stepperS];
+                    if(bob[stepperQ][stepperP].ContainsKey(stepperS-1)){
+                        bob[stepperQ][stepperP][stepperS-1] = steppers[stepperQ][stepperP][stepperS];
                     }
                     else{
-                        bob[stepperQ][stepperP][stepperS-1] = steppers[stepperQ][stepperP][stepperS]; //need to check if this copy is deep or shallow, if shallow may break everything
-                                               
+                        bob[stepperQ][stepperP].Add(stepperS-1, steppers[stepperQ][stepperP][stepperS]);
                     }
+
                     stepper_S = stepperS;
                 }
-                print(stepper_S);
-                steppers[stepperQ][stepperP].Remove(stepper_S);
-                foreach (Stepper s in steppersAt0)
-                {
-                    RegisterFutureStepper(s);
+                bob[stepperQ][stepperP].Remove(stepper_S);
+            }
+        }
+
+        foreach (var stepperQ in bob.Keys)
+        {
+            foreach (int stepperP in bob[stepperQ].Keys)
+            {
+                List<Stepper> steppersAt0 = new List<Stepper>();
+                steppers[stepperQ][stepperP] = new Dictionary<int, List<Stepper>>(bob[stepperQ][stepperP]);
+                
+                if(bob[stepperQ][stepperP].ContainsKey(-1)){
+                    steppersAt0 = new List<Stepper>(bob[stepperQ][stepperP][-1]);
+                    steppers[stepperQ][stepperP].Remove(-1);
+                    foreach (Stepper s in steppersAt0)
+                    {
+                        RegisterFutureStepper(s);
+                    }
                 }
             }
         }
@@ -119,13 +134,14 @@ public class AbstractScheduler : MonoBehaviour, ISchedulable, IInitializable
         {
             foreach (int stepperP in steppers[stepperQ].Keys)
             {
-                foreach (int stepperS in steppers[stepperQ][stepperP].Keys)
-                {
-                    foreach (Stepper s in steppers[stepperQ][stepperP][stepperS])
+                if(steppers[stepperQ][stepperP].ContainsKey(0)){
+
+                    foreach (Stepper s in steppers[stepperQ][stepperP][0])
                     {
                         s.Step();
                     }
                 }
+                
             }
         }
 

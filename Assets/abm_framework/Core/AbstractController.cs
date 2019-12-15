@@ -9,12 +9,15 @@ namespace ABM
     {
         using System.Collections.Generic;
         using UnityEngine;
+        using System.Diagnostics;
 
         /// <summary>
         /// Abstract controller class. To be used as a blueprint for simulation-specific controllers. A simulation-specific controller should inherit from this class
         /// </summary>
         public class AbstractController : MonoBehaviour, ISteppable, IInitializable{
 
+            int milisDelayCum = 0;
+            float millisDelayAvg = 0f;
             AbstractScheduler scheduler;
 
             /// <summary>
@@ -38,7 +41,7 @@ namespace ABM
             /// <summary>
             /// Adds and agent to the register list.
             /// </summary>
-            /// <param name="a"></param>
+            /// <param name="a">The agent to add</param>
             public void RegisterAgent(AbstractAgent a){
                 _agents.Add(a);
             }
@@ -46,7 +49,7 @@ namespace ABM
             /// <summary>
             /// Removes an agent from the register list. DOES NOT destroy the agent object, this should be taken care of by the script calling this function. 
             /// </summary>
-            /// <param name="a">The agent to deregister</param>
+            /// <param name="a">The agent to remove</param>
             public void DeregisterAgent(AbstractAgent a){
                 _agents.Remove(a);
             }
@@ -57,7 +60,8 @@ namespace ABM
             public virtual void Init(){
                 _agents = new List<AbstractAgent>();
                 simStartTime = Time.frameCount;
-                scheduler = GameObject.FindObjectOfType<AbstractScheduler>();
+
+                scheduler = new AbstractScheduler();
                 scheduler.Init();
             }
 
@@ -69,8 +73,18 @@ namespace ABM
                     return;
                 }
                 
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
                 scheduler.Tick();
                 // AgentStepLoop(int.MinValue, int.MaxValue);
+
+                stopwatch.Stop();
+
+                // UnityEngine.Debug.Log("ControllerStep: " + stopwatch.Elapsed);
+                milisDelayCum += stopwatch.Elapsed.Milliseconds;
+                if(Time.frameCount - simStartTime != 0)
+                    millisDelayAvg  = (float)milisDelayCum / (Time.frameCount - simStartTime);
             }
 
             /// <summary>
@@ -83,7 +97,20 @@ namespace ABM
                     return;
                 }
 
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                // scheduler.Tick();
                 AgentStepLoop(priorityS, priorityE);
+
+                stopwatch.Stop();
+
+                // UnityEngine.Debug.Log("ControllerStep: " + stopwatch.Elapsed);
+                milisDelayCum += stopwatch.Elapsed.Milliseconds;
+                if(Time.frameCount - simStartTime != 0)
+                    millisDelayAvg  = (float)milisDelayCum / (Time.frameCount - simStartTime);
+
+                
             }
 
             /// <summary>
@@ -95,7 +122,20 @@ namespace ABM
                     return;
                 }
 
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                // scheduler.Tick();
                 AgentStepLoop(_stepperQueuePrompt);
+
+                stopwatch.Stop();
+
+                // UnityEngine.Debug.Log("ControllerStep: " + stopwatch.Elapsed);
+                milisDelayCum += stopwatch.Elapsed.Milliseconds;
+                if(Time.frameCount - simStartTime != 0)
+                    millisDelayAvg  = (float)milisDelayCum / (Time.frameCount - simStartTime);
+
+                
             }
 
             /// <summary>
@@ -125,6 +165,14 @@ namespace ABM
                 {
                     a.Step(_stepperQueuePrompt);
                 }
+            }
+
+            public void RegisterStepper(Stepper s){
+                scheduler.RegisterStepper(s);
+            }
+
+            public void DeregisterStepper(Stepper s){
+                scheduler.DeregisterStepper(s);
             }
 
             /// <summary>

@@ -250,7 +250,7 @@ MonoBehaviour:
   cellLm:
     serializedVersion: 2
     m_Bits: 1024
-  similarityThreshold: 0.3
+  similarityThreshold: 0.7
   agentPopulationPerc: 0.8
 --- !u!1 &1499901974
 GameObject:

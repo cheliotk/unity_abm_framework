@@ -117,7 +117,8 @@ namespace ABM
                 _steppers.Add(s);
                 _steppers.Sort();
                 ResetSteppersPriorityList();
-                GameObject.FindObjectOfType<AbstractScheduler>().RegisterStepper(s);
+                
+                controller.RegisterStepper(s);
             }
 
             /// <summary>
@@ -128,6 +129,8 @@ namespace ABM
                 _steppers.Remove(s);
                 _steppers.Sort();
                 ResetSteppersPriorityList();
+
+                controller.DeregisterStepper(s);
             }
 
             /// <summary>

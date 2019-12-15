@@ -30,11 +30,11 @@ public class SegregationController : AbstractController
         GenerateAgents();
     }
 
-    public override void Step(){
-        Step(0,150);
-        Step(150,250);
-        Step(250,350);
-    }
+    // public override void Step(){
+    //     Step(0,150);
+    //     Step(150,250);
+    //     Step(250,350);
+    // }
 
     void GenerateEnvironment(){
         List<cellScript> cellsList = new List<cellScript>();
