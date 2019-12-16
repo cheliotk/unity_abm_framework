@@ -78,6 +78,11 @@ namespace ABM
             }
 
             /// <summary>
+            /// The agent this stepper belongs to
+            /// </summary>
+            AbstractAgent owner;
+
+            /// <summary>
             /// Default comparer for Stepper type, using priorities. Extends the Stepper class and allows sorting of Stepper IEnumerables 
             /// </summary>
             /// <param name="otherStepper"></param>
@@ -96,7 +101,9 @@ namespace ABM
             /// Public method that runs the actual associated method
             /// </summary>
             public virtual void Step(){
+                if(owner){
                     funcToCall();
+                }
             }
             
             /// <summary>
@@ -107,12 +114,14 @@ namespace ABM
             /// <param name="_priorityValue">Where to place the stepper in the scheduler queue, using priority values (soft range 0-1000, lower is earlier)</param>
             public Stepper(int _stepValue,
                             Utilities.Del callback,
-                            int _priorityValue = 500){
+                            int _priorityValue,
+                            AbstractAgent _owner){
                 _step = _stepValue;
                 funcToCall = callback;
                 _priority = _priorityValue;
                 _name = callback.Method.Name;
                 _startFrame = Time.frameCount;
+                owner = _owner;
                 if(priority < 333){
                     _stepperQueue = Stepper.StepperQueueOrder.EARLY;
                 }
@@ -132,12 +141,14 @@ namespace ABM
             /// <param name="_stepperQueuePrompt">Where to place the stepper in the scheduler queue, using StepperQueueOrder values (EARLY, NORMAL, LATE)</param>
             public Stepper(int _stepValue,
                             Utilities.Del callback,
-                            StepperQueueOrder _stepperQueuePrompt){
+                            StepperQueueOrder _stepperQueuePrompt,
+                            AbstractAgent _owner){
                 _step = _stepValue;
                 funcToCall = callback;
                 _stepperQueue = _stepperQueuePrompt;
                 _name = callback.Method.Name;
                 _startFrame = Time.frameCount;
+                owner = _owner;
                 switch (stepperQueue)
                 {
                     case StepperQueueOrder.EARLY:

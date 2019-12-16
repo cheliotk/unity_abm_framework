@@ -9,7 +9,7 @@ namespace ABM
         /// <summary>
         /// Abstract agent class. To be used as a blueprint for specific simulation agents. A simulation-specific agent class should inherit from this class
         /// </summary>
-        public class AbstractAgent : MonoBehaviour, ISteppable, IInitializable
+        public class AbstractAgent : MonoBehaviour, IInitializable
         {
 
             /// <summary>
@@ -19,26 +19,6 @@ namespace ABM
             public List<Stepper> steppers{
                 get{
                     return _steppers;
-                }
-            }
-
-            /// <summary>
-            /// List of stepper priority values for all steppers on this agent
-            /// </summary>
-            List<int> _steppersPriorityList;
-            public List<int> steppersPriorityList{
-                get{
-                    return _steppersPriorityList;
-                }
-            }
-
-            /// <summary>
-            /// List of stepperQueue slots of all steppers on this agent
-            /// </summary>
-            List<Stepper.StepperQueueOrder> _steppersQueueList;
-            public List<Stepper.StepperQueueOrder> steppersQueueList{
-                get{
-                    return _steppersQueueList;
                 }
             }
 
@@ -65,48 +45,6 @@ namespace ABM
             /// </summary>
             public virtual void Init(){
                 _steppers = new List<Stepper>();
-                _steppersPriorityList = new List<int>();
-            }
-
-            /// <summary>
-            /// Executes all steppers on this agent
-            /// </summary>
-            public virtual void Step(){
-                Step(int.MinValue, int.MaxValue);
-            }
-
-            /// <summary>
-            /// Filters the agent's steppers by stepper priority value range and proceeds with execution of valid steppers 
-            /// </summary>
-            /// <param name="priorityS">The lower bound for the stepper priority range (inclusive)</param>
-            /// <param name="priorityE">The upper bound for the stepper priority range (exclusive)</param>
-            public virtual void Step(int priorityS = int.MinValue, int priorityE = int.MaxValue){
-                var steppersFiltered = steppers.FindAll(s => s.priority >= priorityS && s.priority < priorityE);
-                StepSteppers(steppersFiltered);
-            }
-
-            /// <summary>
-            /// Filters the agent's steppers by stepperQueue slot and proceeds with execution of valid steppers 
-            /// </summary>
-            /// <param name="_stepperQueuePrompt">The stepperQueue slot (EARLY, NORMAL, LATE) for which to execute steppers</param>
-            public virtual void Step(Stepper.StepperQueueOrder _stepperQueuePrompt){
-                var steppersFiltered = steppers.FindAll(s => s.stepperQueue == _stepperQueuePrompt);
-                StepSteppers(steppersFiltered);
-            }
-
-            /// <summary>
-            /// Executes all provided steppers, if their frequency is execution frequency is valid for this frame
-            /// </summary>
-            /// <param name="steppers">List of steppers to execute</param>
-            void StepSteppers(List<Stepper> steppers){
-                steppers.Sort();
-
-                foreach (Stepper s in steppers)
-                {
-                    if((s.startFrame + Time.frameCount) % s.step == 0 || s.startFrame == Time.frameCount){
-                        s.Step();
-                    }
-                }
             }
 
             /// <summary>
@@ -116,7 +54,6 @@ namespace ABM
             void RegisterStepper(Stepper s){
                 _steppers.Add(s);
                 _steppers.Sort();
-                ResetSteppersPriorityList();
                 
                 controller.RegisterStepper(s);
             }
@@ -128,7 +65,6 @@ namespace ABM
             void DeregisterStepper(Stepper s){
                 _steppers.Remove(s);
                 _steppers.Sort();
-                ResetSteppersPriorityList();
 
                 controller.DeregisterStepper(s);
             }
@@ -188,7 +124,7 @@ namespace ABM
                             int _delayStartByFrames = 0){
                 
                 if(_delayStartByFrames == 0){
-                    Stepper s = new Stepper(_stepValue, callback, _priorityValue);
+                    Stepper s = new Stepper(_stepValue, callback, _priorityValue, this);
                     RegisterStepper(s);
                 }
                 else{
@@ -209,7 +145,7 @@ namespace ABM
                             int _delayStartByFrames = 0){
                 
                 if(_delayStartByFrames == 0){
-                    Stepper s = new Stepper(_stepValue, callback, _stepperQueuePrompt);
+                    Stepper s = new Stepper(_stepValue, callback, _stepperQueuePrompt, this);
                     RegisterStepper(s);
                 }
                 else{
@@ -233,7 +169,7 @@ namespace ABM
                 while(Time.frameCount < frameToRegisterOn){
                     yield return null;
                 }
-                Stepper s = new Stepper(_stepValue, callback, _priorityValue);
+                Stepper s = new Stepper(_stepValue, callback, _priorityValue, this);
                 RegisterStepper(s);
             }
 
@@ -253,7 +189,7 @@ namespace ABM
                 while(Time.frameCount < frameToRegisterOn){
                     yield return null;
                 }
-                Stepper s = new Stepper(_stepValue, callback, _stepperQueuePrompt);
+                Stepper s = new Stepper(_stepValue, callback, _stepperQueuePrompt, this);
                 RegisterStepper(s);
             }
 
@@ -267,54 +203,16 @@ namespace ABM
             }
 
             /// <summary>
-            /// Populates and sorts the steppers priority and queue lists, for all currently registered steppers.
+            /// OnDestroy is called when the agent GameObject is destroyed.
+            /// This ensures that all references to steppers on this agent as well as the agent itself are cleared
             /// </summary>
-            void ResetSteppersPriorityList(){
-                _steppersPriorityList = new List<int>();
-                _steppersQueueList = new List<Stepper.StepperQueueOrder>();
+            private void OnDestroy() {
                 for (int i = 0; i < steppers.Count; i++)
                 {
                     Stepper s = steppers[i];
-                    if (!_steppersPriorityList.Contains(s.priority)){
-                        _steppersPriorityList.Add(s.priority);
-                    }
-
-                    if(!_steppersQueueList.Contains(s.stepperQueue)){
-                        _steppersQueueList.Add(s.stepperQueue);
-                    }
+                    DestroyStepper(s);
                 }
-                _steppersPriorityList.Sort();
-            }
-
-            /// <summary>
-            /// Checks whether this agent has any steppers registered within a particular stepper priority value range (range should be within 0-1000, lower is earlier)
-            /// </summary>
-            /// <param name="priorityS">The lower bound for the stepper priority range (inclusive)</param>
-            /// <param name="priorityE">The upper bound for the stepper priority range (exclusive)</param>
-            /// <returns>True if steppers exist within the given range, otherwise false</returns>
-            public bool HasSteppersInPriorityRange(int priorityS, int priorityE){
-                foreach (int p in steppersPriorityList)
-                {
-                    if(p >= priorityS && p < priorityE){
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            /// <summary>
-            /// Checks whether this agent has any steppers registered for a particular stepperQueue slot.
-            /// </summary>
-            /// <param name="_stepperQueuePrompt">The stepperQueue slot to check for</param>
-            /// <returns>True if steppers exist for the stepperQueue slot, otherwise false</returns>
-            public bool HasSteppersInQueue(Stepper.StepperQueueOrder _stepperQueuePrompt){
-                foreach (var stepperQ in steppersQueueList)
-                {
-                    if(stepperQ == _stepperQueuePrompt){
-                        return true;
-                    }
-                }
-                return false;
+                controller.DeregisterAgent(this);
             }
         }
     }

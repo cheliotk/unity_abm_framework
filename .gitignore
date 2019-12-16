@@ -40,3 +40,7 @@ sysinfo.txt
 Assets/Mapbox
 Assets/Resources/Mapbox
 Assets/RandomFromDistributions/Examples
+
+# VSCode Cache and settings
+.vscode
+.VSCodeCounter

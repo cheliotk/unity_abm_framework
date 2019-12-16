@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using UnityEngine;
-using System.Collections;
 using UnityEditor;
 
 using ABM.Core;
@@ -84,9 +83,11 @@ public class BoidController : AbstractController
         renderFrameCount = Time.frameCount;
         avgDistCovered = 0f;
 
-        Step(Stepper.StepperQueueOrder.EARLY);
-        Step(Stepper.StepperQueueOrder.NORMAL);
-        Step(Stepper.StepperQueueOrder.LATE);
+        // Step(Stepper.StepperQueueOrder.EARLY);
+        // Step(Stepper.StepperQueueOrder.NORMAL);
+        // Step(Stepper.StepperQueueOrder.LATE);
+
+        base.Step();
 
         avgDistCovered /= agents.Count;
     }
