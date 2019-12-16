@@ -187,8 +187,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 243367004}
-  m_LocalRotation: {x: 0.36526796, y: 0.12290098, z: -0.048718706, w: 0.92146695}
-  m_LocalPosition: {x: -77, y: 266, z: -289}
+  m_LocalRotation: {x: 0.32775396, y: 0.36434844, z: -0.13876572, w: 0.8605647}
+  m_LocalPosition: {x: -224.89775, y: 235.23558, z: -222.02023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2113415098}
@@ -250,7 +250,7 @@ MonoBehaviour:
   cellLm:
     serializedVersion: 2
     m_Bits: 1024
-  similarityThreshold: 0.7
+  similarityThreshold: 0.6
   agentPopulationPerc: 0.8
 --- !u!1 &1499901974
 GameObject:

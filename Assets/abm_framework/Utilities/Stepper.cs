@@ -112,6 +112,7 @@ namespace ABM
             /// <param name="_stepValue">Execution frequency for this stepper. Default (1) means every frame</param>
             /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
             /// <param name="_priorityValue">Where to place the stepper in the scheduler queue, using priority values (soft range 0-1000, lower is earlier)</param>
+            /// <param name="_owner">The agent this stepper belongs to</param>
             public Stepper(int _stepValue,
                             Utilities.Del callback,
                             int _priorityValue,
@@ -139,6 +140,7 @@ namespace ABM
             /// <param name="_stepValue">Execution frequency for this stepper. Default (1) means every frame</param>
             /// <param name="callback">Name of method to be called. Should be provided as the method name, i.e. MethodName, not "MethodName" or MethodName()</param>
             /// <param name="_stepperQueuePrompt">Where to place the stepper in the scheduler queue, using StepperQueueOrder values (EARLY, NORMAL, LATE)</param>
+            /// <param name="_owner">The agent this stepper belongs to</param>
             public Stepper(int _stepValue,
                             Utilities.Del callback,
                             StepperQueueOrder _stepperQueuePrompt,

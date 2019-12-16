@@ -10,7 +10,7 @@ public class SegregationAgent : AbstractAgent
     public SegregationUtilities.agentType agentType;
     public List<SegregationAgent> neighbours;
     cellScript currentCell;
-    bool needToMove = false;
+    public bool needToMove = false;
     
     public void Init(cellScript cell){
         base.Init();
@@ -24,7 +24,8 @@ public class SegregationAgent : AbstractAgent
         this.transform.localScale = Vector3.one * segController.cellSizeInGameWorld;
 
         agentType = SegregationUtilities.agentType.RED;
-        if(Random.Range(0f,1.0f) < 0.5f){
+        // if(Random.Range(0f,1.0f) < 0.5f){
+        if(segController.rand.NextDouble() < 0.5f){
             agentType = SegregationUtilities.agentType.GREEN;
         }
 

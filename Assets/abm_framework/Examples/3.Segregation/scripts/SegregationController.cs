@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+
 using ABM.Core;
-using ABM;
+
 public class SegregationController : AbstractController
 {
     [Header("Environment Variables")]
@@ -21,20 +22,32 @@ public class SegregationController : AbstractController
     public float similarityThreshold = 0.4f;
     [Range(0f,1.0f)]
     public float agentPopulationPerc = 0.7f;
+    public System.Random rand;
 
     public override void Init(){
         base.Init();
+
+        rand = new System.Random(0);
 
         GenerateEnvironment();
         SetEnvironmentCellNeighbourhoods();
         GenerateAgents();
     }
 
-    // public override void Step(){
-    //     Step(0,150);
-    //     Step(150,250);
-    //     Step(250,350);
-    // }
+    public override void Step(){
+        int agentsSettled = 0;
+        base.Step();
+        foreach (SegregationAgent agent in agents)
+        {
+            if(!agent.needToMove){
+                agentsSettled ++;
+            }
+        }
+        if(agentsSettled == agents.Count){
+            EditorApplication.isPaused = true;
+        }
+
+    }
 
     void GenerateEnvironment(){
         List<cellScript> cellsList = new List<cellScript>();
@@ -76,13 +89,22 @@ public class SegregationController : AbstractController
     }
 
     public cellScript FindFreeCell(){
-        cellScript cs = cells[Random.Range(0,cells.Length)];
+        // cellScript cs = cells[Random.Range(0,cells.Length)];
+
+        // while(cs.isOccupied){
+        //     cs = cells[Random.Range(0,cells.Length)];
+        // }
+        // return (cs);
+
+        cellScript cs = cells[rand.Next(cells.Length)];
 
         while(cs.isOccupied){
-            cs = cells[Random.Range(0,cells.Length)];
+            cs = cells[rand.Next(cells.Length)];
         }
-
         return (cs);
+    }
+
+    public void RecordAgentSettled(bool isSettled){
 
     }
 }

@@ -29,6 +29,7 @@ namespace ABM
             /// The simulation start time, in frames sinceapplication started
             /// </summary>
             int simStartTime;
+            int currentTick;
             
             /// <summary>
             /// Controller initializer method. Initializes the agent list and records simulation start time (in frames)
@@ -48,6 +49,7 @@ namespace ABM
                 if(Time.frameCount - simStartTime < 0){
                     return;
                 }
+                currentTick = Time.frameCount - simStartTime;
                 
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
