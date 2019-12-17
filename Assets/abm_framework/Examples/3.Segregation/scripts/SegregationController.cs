@@ -23,11 +23,14 @@ public class SegregationController : AbstractController
     [Range(0f,1.0f)]
     public float agentPopulationPerc = 0.7f;
     public System.Random rand;
+    
+    [Range(int.MinValue + 64, int.MaxValue - 64)]
+    public int randomSeed = 0;
 
     public override void Init(){
         base.Init();
 
-        rand = new System.Random(0);
+        rand = new System.Random(randomSeed);
 
         GenerateEnvironment();
         SetEnvironmentCellNeighbourhoods();
