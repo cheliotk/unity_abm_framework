@@ -3,10 +3,17 @@
 # Unity ABM Framework (ABMU)
 > An Agent-Based Modelling (ABM) Framework for Unity3D
 
-A brief description of your project, what it is used for and how does life get
-awesome when someone starts to use it.
+The Agent-Based Modelling Framework for Unity3D (**ABMU** for short) is a set of tools that allow the development of Agent-Based Models (ABM) in the Unity3D platform.
 
-## Installing / Getting started
+ABMU allows modellers to take advantage of Unity's built-in methods and classes to create complex agent behaviours in 3D, including Physics, Navigation, Animation, etc, all written in native `C#`.
+
+Developers familiar with Unity3D should find the ABMU framework quite familiar to work with, as it provdes simple hooks for converting native Unity methods into ABMU behaviours.
+
+ABMU is extendable, and can be coupled with other Unity libraries and assets. 
+
+Behind-the-scenes, ABMU implements a scheduling system to handle the execution of agent behaviours at the correct time, simplifying the timestep implementation process and allowing developers to focus on the agent and model behaviour.
+
+## Installation / Getting started
 
 ### From Github
 
@@ -45,7 +52,7 @@ A simulation in ABMU is contained within a Unity scene, and requires 3 elements:
 2. An **Agent** object
 3. A **Scheduler** object
 
-ABMU provides two abstract classes for implementing the first two, the `AbstractController` and the `AbstractAgent` classes, respectively. The `Scheduler` object is created automatically by the controller when the simulation is started.
+ABMU provides two abstract classes for implementing the first two, the `AbstractController` and the `AbstractAgent` class. The `Scheduler` object is created automatically by the controller when the simulation is started.
 
 ### Creating the simulation core elements
 
@@ -90,7 +97,7 @@ public class SimpleAgent : AbstractAgent
     }
 }
 ```
-Note that when overriding an abstract method, it is important to call the method on the base class as well, preferably before implementing any additional functionality.
+Note that when overriding an abstract method, it is important to call the method on the base class as well, before implementing any additional functionality.
 
 ### Defining Behaviours
 Agent behaviours should be defined as methods within the agent class, and can then be added to the scheduler queue for execution as **Steppers**, using the `CreateStepper(MethodName)` method. The following code defines an agent behaviour (the `Move()` method), creates a stepper from that behaviour, and registers it to the scheduler.
@@ -137,7 +144,7 @@ public class SimpleController : AbstractController
     }
 }
 ```
-
+<!-- 
 ### Building
 
 If your project needs some additional steps for the developer to build the
@@ -223,7 +230,7 @@ links to humans using your project. You can include links like:
     to improve the security and privacy of this project!
 - Related projects:
   - Your other project: https://github.com/your/other-project/
-  - Someone else's project: https://github.com/someones/awesome-project/
+  - Someone else's project: https://github.com/someones/awesome-project/ -->
 
 
 ## Licensing
