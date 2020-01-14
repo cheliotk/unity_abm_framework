@@ -18,6 +18,8 @@ public class Scheduler
     /// </summary>
     Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper>>>> steppers;
 
+    public Dictionary<Stepper.StepperQueueOrder, Dictionary<int, List<Stepper>>> steppersEveryTick;
+
     /// <summary>
     /// List of steppers created during this frame
     /// </summary>
@@ -40,6 +42,7 @@ public class Scheduler
     /// </summary>
     void Init(){
         steppers = new Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper> >>>();
+        steppersEveryTick = new Dictionary<Stepper.StepperQueueOrder, Dictionary<int, List<Stepper>>>();
         steppersCreatedThisFrame = new List<Stepper>();
         steppersDestroyedThisFrame = new List<Stepper>();
     }
@@ -85,15 +88,21 @@ public class Scheduler
     /// </summary>
     /// <param name="s">The stepper to be removed from the queue</param>
     void DeregisterDestroyedStepper(Stepper s){
-        Dictionary<int, List<Stepper>> steppersTemp = new Dictionary<int, List<Stepper>>(steppers[s.stepperQueue][s.priority]);
-        foreach (int k in steppers[s.stepperQueue][s.priority].Keys)
-        {
-            if(steppers[s.stepperQueue][s.priority][k].Contains(s)){
-                steppersTemp[k].Remove(s);                
-                break;
-            }
+        if(s.step == 1){
+            steppersEveryTick[s.stepperQueue][s.priority].Remove(s);
         }
-        steppers[s.stepperQueue][s.priority] = new Dictionary<int, List<Stepper>>(steppersTemp);
+        else{
+            Dictionary<int, List<Stepper>> steppersTemp = new Dictionary<int, List<Stepper>>(steppers[s.stepperQueue][s.priority]);
+            foreach (int k in steppers[s.stepperQueue][s.priority].Keys)
+            {
+                if(steppers[s.stepperQueue][s.priority][k].Contains(s)){
+                    steppersTemp[k].Remove(s);                
+                    break;
+                }
+            }
+            steppers[s.stepperQueue][s.priority] = new Dictionary<int, List<Stepper>>(steppersTemp);
+        }
+        
     }
 
     /// <summary>
@@ -102,30 +111,51 @@ public class Scheduler
     /// </summary>
     /// <param name="s">The stepper to be registered</param>
     void RegisterFutureStepper(Stepper s){
-        Dictionary<int, Dictionary<int, List<Stepper>>> steppers_pval;
-        if(steppers.TryGetValue(s.stepperQueue, out steppers_pval)){
-            Dictionary<int, List<Stepper>> steppers_step;
-            if(steppers_pval.TryGetValue(s.priority, out steppers_step)){
-                if(steppers_step.ContainsKey(s.step-1)){
-                    steppers_step[s.step-1].Add(s);
+        if(s.step == 1){
+            Dictionary<int, List<Stepper>> steppersEveryTick_pval;
+            if(steppersEveryTick.TryGetValue(s.stepperQueue, out steppersEveryTick_pval)){
+                if(steppersEveryTick_pval.ContainsKey(s.priority)){
+                    steppersEveryTick_pval[s.priority].Add(s);
                 }
                 else{
-                    steppers_step.Add(s.step-1, new List<Stepper>());
-                    steppers_step[s.step-1].Add(s);
+                    steppersEveryTick_pval.Add(s.priority, new List<Stepper>());
+                    steppersEveryTick_pval[s.priority].Add(s);
                 }
             }
             else{
-                steppers_pval.Add(s.priority, new Dictionary<int, List<Stepper>>());
-                steppers_pval[s.priority].Add(s.step-1, new List<Stepper>());
-                steppers_pval[s.priority][s.step-1].Add(s);
+                steppersEveryTick.Add(s.stepperQueue, new Dictionary<int, List<Stepper>>());
+                steppersEveryTick[s.stepperQueue].Add(s.priority, new List<Stepper>());
+                steppersEveryTick[s.stepperQueue][s.priority].Add(s);
             }
         }
+
         else{
-            steppers.Add(s.stepperQueue, new Dictionary<int, Dictionary<int, List<Stepper>>>());
-            steppers[s.stepperQueue].Add(s.priority, new Dictionary<int, List<Stepper>>());
-            steppers[s.stepperQueue][s.priority].Add(s.step-1, new List<Stepper>());
-            steppers[s.stepperQueue][s.priority][s.step-1].Add(s);
+            Dictionary<int, Dictionary<int, List<Stepper>>> steppers_pval;
+            if(steppers.TryGetValue(s.stepperQueue, out steppers_pval)){
+                Dictionary<int, List<Stepper>> steppers_step;
+                if(steppers_pval.TryGetValue(s.priority, out steppers_step)){
+                    if(steppers_step.ContainsKey(s.step-1)){
+                        steppers_step[s.step-1].Add(s);
+                    }
+                    else{
+                        steppers_step.Add(s.step-1, new List<Stepper>());
+                        steppers_step[s.step-1].Add(s);
+                    }
+                }
+                else{
+                    steppers_pval.Add(s.priority, new Dictionary<int, List<Stepper>>());
+                    steppers_pval[s.priority].Add(s.step-1, new List<Stepper>());
+                    steppers_pval[s.priority][s.step-1].Add(s);
+                }
+            }
+            else{
+                steppers.Add(s.stepperQueue, new Dictionary<int, Dictionary<int, List<Stepper>>>());
+                steppers[s.stepperQueue].Add(s.priority, new Dictionary<int, List<Stepper>>());
+                steppers[s.stepperQueue][s.priority].Add(s.step-1, new List<Stepper>());
+                steppers[s.stepperQueue][s.priority][s.step-1].Add(s);
+            }
         }
+        
     }
 
     /// <summary>
@@ -175,6 +205,7 @@ public class Scheduler
         }
     }
 
+
     /// <summary>
     /// Executes all steppers registered for execution at this update tick.
     /// Stepper execution is performed synchronously for priority-sensitive steppers by filtering by stepperQueue order and stepper priority value,
@@ -188,21 +219,52 @@ public class Scheduler
         steppersCreatedThisFrame = new List<Stepper>();
         steppersDestroyedThisFrame = new List<Stepper>();
 
-        foreach (var stepperQ in steppers.Keys)
+        List<Stepper.StepperQueueOrder> stepperQVals = new List<Stepper.StepperQueueOrder>(steppers.Keys);
+        stepperQVals.AddRange(steppersEveryTick.Keys);
+        HashSet<Stepper.StepperQueueOrder> stepperQValsUniqueTemp = new HashSet<Stepper.StepperQueueOrder>(stepperQVals);
+        List<Stepper.StepperQueueOrder> stepperQValsUnique = new List<Stepper.StepperQueueOrder>(stepperQValsUniqueTemp);
+        stepperQValsUnique.Sort((a,b) => a.CompareTo(b));
+        foreach (var stepperQ in stepperQValsUnique)
         {
-            List<int> steppersPSorted = new List<int>(steppers[stepperQ].Keys);
-            steppersPSorted.Sort((a,b) => a.CompareTo(b));
+            List<int> stepperPVals = new List<int>();
+            
+            if(steppers.ContainsKey(stepperQ))
+                stepperPVals.AddRange(steppers[stepperQ].Keys);
+            
+            if(steppersEveryTick.ContainsKey(stepperQ))
+                stepperPVals.AddRange(steppersEveryTick[stepperQ].Keys);
+    
+            HashSet<int> stepperPValsUniqueTemp = new HashSet<int>(stepperPVals);
+            List<int> stepperPValsUnique = new List<int>(stepperPValsUniqueTemp);
+            stepperPValsUnique.Sort((a,b) => a.CompareTo(b));
 
-            foreach (int stepperP in steppersPSorted)
+            foreach (int stepperP in stepperPValsUnique)
             {
-                if(steppers[stepperQ][stepperP].ContainsKey(0)){
-
-                    foreach (Stepper s in steppers[stepperQ][stepperP][0])
-                    {
-                        s.Step();
+                if(steppersEveryTick.ContainsKey(stepperQ))
+                {
+                    if(steppersEveryTick[stepperQ].ContainsKey(stepperP)){
+                        foreach (Stepper s in steppersEveryTick[stepperQ][stepperP])
+                        {
+                            s.Step();
+                        }
                     }
                 }
+
+                if(steppers.ContainsKey(stepperQ)){
+                    if (steppers[stepperQ].ContainsKey(stepperP))
+                    {
+                        if(steppers[stepperQ][stepperP].ContainsKey(0)){
+
+                            foreach (Stepper s in steppers[stepperQ][stepperP][0])
+                            {
+                                s.Step();
+                            }
+                        }
+                    }
+                }
+                
             }
+            
         }
         AdvanceSchedulerTick();
     }
