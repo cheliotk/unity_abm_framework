@@ -203,6 +203,14 @@ namespace ABM
             }
 
             /// <summary>
+            /// Deletes a stepper
+            /// </summary>
+            /// <param name="stepperName">The name of the stepper (usually the method name) to be removed</param>
+            public void DestroyStepper(string stepperName){
+                DeregisterStepper(steppers.Find(s => s.name == stepperName));
+            }
+
+            /// <summary>
             /// OnDestroy is called when the agent GameObject is destroyed.
             /// This ensures that all references to steppers on this agent as well as the agent itself are cleared
             /// </summary>

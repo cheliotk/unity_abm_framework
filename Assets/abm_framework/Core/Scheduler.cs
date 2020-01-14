@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using UnityEngine;
 using ABM.Core;
 
 /// <summary>
@@ -190,7 +190,10 @@ public class Scheduler
 
         foreach (var stepperQ in steppers.Keys)
         {
-            foreach (int stepperP in steppers[stepperQ].Keys)
+            List<int> steppersPSorted = new List<int>(steppers[stepperQ].Keys);
+            steppersPSorted.Sort((a,b) => a.CompareTo(b));
+
+            foreach (int stepperP in steppersPSorted)
             {
                 if(steppers[stepperQ][stepperP].ContainsKey(0)){
 

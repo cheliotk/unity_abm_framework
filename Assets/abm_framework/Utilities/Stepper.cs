@@ -13,6 +13,8 @@ namespace ABM
             /// <summary>
             /// Definition of stepper queue enumerator, with three values: EARLY, NORMAL, LATE
             /// </summary>
+            
+            [Flags]
             public enum StepperQueueOrder
             {
                 EARLY,

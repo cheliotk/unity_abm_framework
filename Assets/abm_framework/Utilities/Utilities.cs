@@ -70,4 +70,20 @@
         public delegate void Del<in T1, in T2>(T1 arg1, T2 arg2);
         // public delegate TResult Func<in T1, out TResult>(T1 arg);
     }
+
+    public static class IListExtensions {
+        /// <summary>
+        /// Shuffles the element order of the specified list.
+        /// </summary>
+        public static void Shuffle<T>(this IList<T> ts) {
+            var count = ts.Count;
+            var last = count - 1;
+            for (var i = 0; i < last; ++i) {
+                var r = UnityEngine.Random.Range(i, count);
+                var tmp = ts[i];
+                ts[i] = ts[r];
+                ts[r] = tmp;
+            }
+        }
+    }
 }

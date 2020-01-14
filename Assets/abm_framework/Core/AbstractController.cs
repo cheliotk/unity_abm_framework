@@ -13,7 +13,7 @@ namespace ABM
 
             int milisDelayCum = 0;
             float millisDelayAvg = 0f;
-            Scheduler scheduler;
+            public Scheduler scheduler;
 
             /// <summary>
             /// A register of all agents currently in the simulation
