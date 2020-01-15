@@ -23,7 +23,7 @@ Download the asset from the [Unity Asset Store](linkToAsset.com)
 
 ### Unity Package
 
-Download the [unity package](linkToUnityPackage) and import into an existing Unity project.
+Download the [unity package](unityPackage/abm_framework.unitypackage) and import into an existing Unity project.
 
 ### Initial Configuration
 
