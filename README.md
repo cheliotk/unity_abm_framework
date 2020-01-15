@@ -16,11 +16,11 @@ Behind-the-scenes, ABMU implements a scheduling system to handle the execution o
 ### From Github
 
 Clone this repository and open in the Unity Editor.
-
+<!---
 ### From the Unity Asset Store
 
 Download the asset from the [Unity Asset Store](linkToAsset.com)
-
+--->
 ### Unity Package
 
 Download the [unity package](unityPackage/abm_framework.unitypackage) and import into an existing Unity project.
