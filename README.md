@@ -118,9 +118,11 @@ public class SimpleAgent : AbstractAgent
 ```
 Once a stepper has been created and registered, it will be automatically executed every frame, until it is deregistered. Steppers can be removed from the scheduler queue using the `DestroyStepper(Stepper s)` function.
 
-### Instantiating agents and running a simulation
+### Instantiating agents
 
-Once an agent class has been created, it should be added to a GameObject in the Unity Editor and (preferably) converted into a prefab, in order to add a reference to it in the controller. Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller, and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
+Once an agent class has been created, it should be added to a GameObject in the Unity Editor and converted into a prefab.
+
+Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller, and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
 
 ```
 using UnityEngine;
@@ -142,6 +144,21 @@ public class SimpleController : AbstractController
     }
 }
 ```
+### Running a simulation
+
+**ABMU** automatically controls and advances the simulation, so no additional code is needed from the user. The `AbstractController` class has a `Step()` function that advances the simulaino by one tick, and is executed during `LateUpdate()`. The controller's `Step()` function calls the `Tick()` method on the `Scheduler`, which keeps a record of all steppers registered so far and executes them once in order.
+
+As initialization and updating is handled by **ABMU**, users **should not** implement any of Unity's event functions, i.e. `Start()`, `Update()`, `FixedUpdate()`, `LateUpdate()`, etc, as they may interfere with **ABMU**'s execution order.
+
+## Examples
+
+More examples are provided in the project, in the [Examples](Assets/abm_framework/Examples) folder. Five example models are included:
+
+- The simple random movement model used in this document.
+- A **Neighbour Detection** model, where randomly wandering agents alter their speed and size based on the number of other agents in their neighbourhood.
+- An implementation of Raynolds' (1987) [3D Boids model](http://www.red3d.com/cwr/boids/) ([ref](https://doi.org/10.1145/37401.37406))
+- Schelling's (1971) [Segregation model](http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/) ([ref](https://doi.org/10.1080/0022250X.1971.9989794)), adapted to run in 3D space
+- An implementation of Epstein & Axtell's (1996) [Sugarscape model](https://en.wikipedia.org/wiki/Sugarscape) ([ref](https://doi.org/10.7551/mitpress/3374.003.0004))
 
 ## Licensing
 

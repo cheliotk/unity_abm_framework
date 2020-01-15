@@ -8,7 +8,9 @@ using ABM.Core;
 public class Scheduler
 {
     /// <summary>
-    /// Dictionary structure for the scheduler queue, holds all steppers currently registered in the simulation
+    /// Dictionary structure for the scheduler queue,
+    /// holds all steppers currently registered in the simulation
+    /// that DO NOT run every tick
     /// Structure:
     /// key 1- StepperQOrder (EARLY, NORMAL, LATE)
     /// key 2-- StepperPriorityValue (0-1000)
@@ -18,6 +20,15 @@ public class Scheduler
     /// </summary>
     Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper>>>> steppers;
 
+    /// <summary>
+    /// Dictionary structure for the scheduler queue for steppers running every tick,
+    /// holds all steppers currently registered in the simulation that have a step = 1
+    /// Structure:
+    /// key 1- StepperQOrder (EARLY, NORMAL, LATE)
+    /// key 2-- StepperPriorityValue (0-1000)
+    /// key 3--- int index for List of Stepper objects for current frame
+    /// val 4---- Stepper object
+    /// </summary>
     public Dictionary<Stepper.StepperQueueOrder, Dictionary<int, List<Stepper>>> steppersEveryTick;
 
     /// <summary>
@@ -25,6 +36,9 @@ public class Scheduler
     /// </summary>
     List<Stepper> steppersCreatedThisFrame;
 
+    /// <summary>
+    /// List of steppers created during this frame that should also run this frame
+    /// </summary>
     List<Stepper> steppersToRunThisFrame;
 
     /// <summary>
@@ -32,6 +46,12 @@ public class Scheduler
     /// </summary>
     List<Stepper> steppersDestroyedThisFrame;
 
+    /// <summary>
+    /// The current stepper priority value,
+    /// loops through the entirety of existing priority values during the Tick() method
+    /// and resets at the end of the frame.
+    /// Is used to establish proper executino of steppers created this tick 
+    /// </summary>
     int currentStepperP = -1;
 
     /// <summary>
@@ -120,50 +140,64 @@ public class Scheduler
     /// <param name="s">The stepper to be registered</param>
     void RegisterFutureStepper(Stepper s){
         if(s.step == 1){
-            Dictionary<int, List<Stepper>> steppersEveryTick_pval;
-            if(steppersEveryTick.TryGetValue(s.stepperQueue, out steppersEveryTick_pval)){
-                if(steppersEveryTick_pval.ContainsKey(s.priority)){
-                    steppersEveryTick_pval[s.priority].Add(s);
-                }
-                else{
-                    steppersEveryTick_pval.Add(s.priority, new List<Stepper>());
-                    steppersEveryTick_pval[s.priority].Add(s);
-                }
-            }
-            else{
-                steppersEveryTick.Add(s.stepperQueue, new Dictionary<int, List<Stepper>>());
-                steppersEveryTick[s.stepperQueue].Add(s.priority, new List<Stepper>());
-                steppersEveryTick[s.stepperQueue][s.priority].Add(s);
-            }
+            RegisterFutureStepperWithStep_1(s);
         }
-
         else{
-            Dictionary<int, Dictionary<int, List<Stepper>>> steppers_pval;
-            if(steppers.TryGetValue(s.stepperQueue, out steppers_pval)){
-                Dictionary<int, List<Stepper>> steppers_step;
-                if(steppers_pval.TryGetValue(s.priority, out steppers_step)){
-                    if(steppers_step.ContainsKey(s.step-1)){
-                        steppers_step[s.step-1].Add(s);
-                    }
-                    else{
-                        steppers_step.Add(s.step-1, new List<Stepper>());
-                        steppers_step[s.step-1].Add(s);
-                    }
+            RegisterFutureStepperWithStepNot_1(s);
+        }
+    }
+
+    /// <summary>
+    /// Registers a stepper to be run at all future timesteps (for steppers with step = 1)
+    /// </summary>
+    /// <param name="s">The stepper to be registered</param>
+    void RegisterFutureStepperWithStep_1(Stepper s){
+        Dictionary<int, List<Stepper>> steppersEveryTick_pval;
+        if(steppersEveryTick.TryGetValue(s.stepperQueue, out steppersEveryTick_pval)){
+            if(steppersEveryTick_pval.ContainsKey(s.priority)){
+                steppersEveryTick_pval[s.priority].Add(s);
+            }
+            else{
+                steppersEveryTick_pval.Add(s.priority, new List<Stepper>());
+                steppersEveryTick_pval[s.priority].Add(s);
+            }
+        }
+        else{
+            steppersEveryTick.Add(s.stepperQueue, new Dictionary<int, List<Stepper>>());
+            steppersEveryTick[s.stepperQueue].Add(s.priority, new List<Stepper>());
+            steppersEveryTick[s.stepperQueue][s.priority].Add(s);
+        }
+    }
+
+    /// <summary>
+    /// Registers a stepper to be run at future intervals (for steppers with step > 1)
+    /// </summary>
+    /// <param name="s">The stepper to be registered</param>
+    void RegisterFutureStepperWithStepNot_1(Stepper s){
+        Dictionary<int, Dictionary<int, List<Stepper>>> steppers_pval;
+        if(steppers.TryGetValue(s.stepperQueue, out steppers_pval)){
+            Dictionary<int, List<Stepper>> steppers_step;
+            if(steppers_pval.TryGetValue(s.priority, out steppers_step)){
+                if(steppers_step.ContainsKey(s.step-1)){
+                    steppers_step[s.step-1].Add(s);
                 }
                 else{
-                    steppers_pval.Add(s.priority, new Dictionary<int, List<Stepper>>());
-                    steppers_pval[s.priority].Add(s.step-1, new List<Stepper>());
-                    steppers_pval[s.priority][s.step-1].Add(s);
+                    steppers_step.Add(s.step-1, new List<Stepper>());
+                    steppers_step[s.step-1].Add(s);
                 }
             }
             else{
-                steppers.Add(s.stepperQueue, new Dictionary<int, Dictionary<int, List<Stepper>>>());
-                steppers[s.stepperQueue].Add(s.priority, new Dictionary<int, List<Stepper>>());
-                steppers[s.stepperQueue][s.priority].Add(s.step-1, new List<Stepper>());
-                steppers[s.stepperQueue][s.priority][s.step-1].Add(s);
+                steppers_pval.Add(s.priority, new Dictionary<int, List<Stepper>>());
+                steppers_pval[s.priority].Add(s.step-1, new List<Stepper>());
+                steppers_pval[s.priority][s.step-1].Add(s);
             }
         }
-        
+        else{
+            steppers.Add(s.stepperQueue, new Dictionary<int, Dictionary<int, List<Stepper>>>());
+            steppers[s.stepperQueue].Add(s.priority, new Dictionary<int, List<Stepper>>());
+            steppers[s.stepperQueue][s.priority].Add(s.step-1, new List<Stepper>());
+            steppers[s.stepperQueue][s.priority][s.step-1].Add(s);
+        }
     }
 
     /// <summary>
@@ -213,7 +247,6 @@ public class Scheduler
         }
     }
 
-
     /// <summary>
     /// Executes all steppers registered for execution at this update tick.
     /// Stepper execution is performed synchronously for priority-sensitive steppers by filtering by stepperQueue order and stepper priority value,
@@ -226,30 +259,18 @@ public class Scheduler
 
         steppersCreatedThisFrame = new List<Stepper>();
         steppersToRunThisFrame = new List<Stepper>();
-
         steppersDestroyedThisFrame = new List<Stepper>();
 
-        List<Stepper.StepperQueueOrder> stepperQVals = new List<Stepper.StepperQueueOrder>(steppers.Keys);
-        stepperQVals.AddRange(steppersEveryTick.Keys);
-        HashSet<Stepper.StepperQueueOrder> stepperQValsUniqueTemp = new HashSet<Stepper.StepperQueueOrder>(stepperQVals);
-        List<Stepper.StepperQueueOrder> stepperQValsUnique = new List<Stepper.StepperQueueOrder>(stepperQValsUniqueTemp);
-        stepperQValsUnique.Sort((a,b) => a.CompareTo(b));
+        List<Stepper.StepperQueueOrder> stepperQValsUnique = GetListOfRegisteredStepperQValues();
+        
+        // Loop through all available stepper queue values in order (EARLY, NORMAL, LATE)
         foreach (var stepperQ in stepperQValsUnique)
         {
-            List<int> stepperPVals = new List<int>();
-            
-            if(steppers.ContainsKey(stepperQ))
-                stepperPVals.AddRange(steppers[stepperQ].Keys);
-            
-            if(steppersEveryTick.ContainsKey(stepperQ))
-                stepperPVals.AddRange(steppersEveryTick[stepperQ].Keys);
-    
-            HashSet<int> stepperPValsUniqueTemp = new HashSet<int>(stepperPVals);
-            List<int> stepperPValsUnique = new List<int>(stepperPValsUniqueTemp);
-            stepperPValsUnique.Sort((a,b) => a.CompareTo(b));
-
             int prevStepperP = -1;
 
+            List<int> stepperPValsUnique = GetListOfRegisteredPriorityValuesAtQ(stepperQ);
+            
+            // Loop through all available stepper priority values in order for this stepper queue 
             foreach (int stepperP in stepperPValsUnique)
             {
                 currentStepperP = stepperP;
@@ -300,5 +321,40 @@ public class Scheduler
 
         currentStepperP = -1;
         AdvanceSchedulerTick();
+    }
+
+    /// <summary>
+    /// Get a list of all available stepper queue values currently in the simulation
+    /// </summary>
+    /// <returns>An ordered Stepper.StepperQueueOrder List of all available stepper queue values</returns>
+    List<Stepper.StepperQueueOrder> GetListOfRegisteredStepperQValues(){
+        List<Stepper.StepperQueueOrder> stepperQVals = new List<Stepper.StepperQueueOrder>(steppers.Keys);
+        stepperQVals.AddRange(steppersEveryTick.Keys);
+        HashSet<Stepper.StepperQueueOrder> stepperQValsUniqueTemp = new HashSet<Stepper.StepperQueueOrder>(stepperQVals);
+        List<Stepper.StepperQueueOrder> stepperQValsUnique = new List<Stepper.StepperQueueOrder>(stepperQValsUniqueTemp);
+        stepperQValsUnique.Sort((a,b) => a.CompareTo(b));
+
+        return stepperQValsUnique;
+    }
+
+    /// <summary>
+    /// Get a list of all available stepper priorities for a given stepper queue value
+    /// </summary>
+    /// <param name="stepperQ">The stepper queue value to check in</param>
+    /// <returns>An ordered int List of all available stepper priority values</returns>
+    List<int> GetListOfRegisteredPriorityValuesAtQ(Stepper.StepperQueueOrder stepperQ){
+        List<int> stepperPVals = new List<int>();
+            
+        if(steppers.ContainsKey(stepperQ))
+            stepperPVals.AddRange(steppers[stepperQ].Keys);
+        
+        if(steppersEveryTick.ContainsKey(stepperQ))
+            stepperPVals.AddRange(steppersEveryTick[stepperQ].Keys);
+
+        HashSet<int> stepperPValsUniqueTemp = new HashSet<int>(stepperPVals);
+        List<int> stepperPValsUnique = new List<int>(stepperPValsUniqueTemp);
+        stepperPValsUnique.Sort((a,b) => a.CompareTo(b));
+
+        return stepperPValsUnique;
     }
 }

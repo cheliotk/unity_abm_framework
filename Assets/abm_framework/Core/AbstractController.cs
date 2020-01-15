@@ -26,10 +26,16 @@ namespace ABM
             }
 
             /// <summary>
-            /// The simulation start time, in frames sinceapplication started
+            /// The simulation start time, in frames since application started
             /// </summary>
             int simStartTime;
-            int currentTick;
+
+            /// <summary>
+            /// The current tick in the simulation
+            /// </summary>
+            public int currentTick {get; private set;}
+
+            public bool isSimulationPaused = false;
             
             /// <summary>
             /// Controller initializer method. Initializes the agent list and records simulation start time (in frames)
@@ -37,29 +43,30 @@ namespace ABM
             public virtual void Init(){
                 _agents = new List<AbstractAgent>();
                 simStartTime = Time.frameCount;
-
+                currentTick = 0;
                 scheduler = new Scheduler();
-                // scheduler.Init();
             }
 
             /// <summary>
             /// Default method for starting the loop to execute steppers on agents for this frame.
             /// </summary>
             public virtual void Step(){
-                if(Time.frameCount - simStartTime < 0){
+                if(Time.frameCount - simStartTime <= 0){
                     return;
                 }
-                currentTick = Time.frameCount - simStartTime;
+                if(!isSimulationPaused){
+                    currentTick ++;
                 
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
 
-                scheduler.Tick();
+                    scheduler.Tick();
 
-                stopwatch.Stop();
-                milisDelayCum += stopwatch.Elapsed.Milliseconds;
-                if(Time.frameCount - simStartTime != 0)
-                    millisDelayAvg  = (float)milisDelayCum / (Time.frameCount - simStartTime);
+                    stopwatch.Stop();
+                    milisDelayCum += stopwatch.Elapsed.Milliseconds;
+                    if(Time.frameCount - simStartTime != 0)
+                        millisDelayAvg  = (float)milisDelayCum / (Time.frameCount - simStartTime);
+                }
             }
 
             /// <summary>

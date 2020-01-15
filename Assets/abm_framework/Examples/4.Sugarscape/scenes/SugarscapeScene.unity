@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90d0d1c61f8799847983d98e26c3e7f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSimulationPaused: 0
   agentPf: {fileID: 8088161950124407026, guid: 259deee04b9ff1b4aac9df2b6874b6b8, type: 3}
   patchPf: {fileID: 724688093874308220, guid: 1b6162a6cced8d849bc8c43bc42b556a, type: 3}
   sugarMap: {fileID: 4900000, guid: 3a203d31706893f458cb45f2ba86bc47, type: 3}
