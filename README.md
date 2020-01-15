@@ -5,7 +5,7 @@ The Agent-Based Modelling Framework for Unity3D (**ABMU** for short) is a set of
 
 ABMU allows modellers to take advantage of Unity's built-in methods and classes to create complex agent behaviours in 3D, including Physics, Navigation, Animation, etc, all written in native `C#`.
 
-Developers familiar with Unity3D should find the ABMU framework quite familiar to work with, as it provdes simple hooks for converting native Unity methods into ABMU behaviours.
+Developers familiar with Unity3D should find the ABMU framework quite familiar to work with, as it provides simple hooks for converting native Unity methods into ABMU behaviours.
 
 ABMU is extendable, and can be coupled with other Unity libraries and assets. 
 
@@ -17,21 +17,17 @@ Behind-the-scenes, ABMU implements a scheduling system to handle the execution o
 
 Clone this repository and open in the Unity Editor.
 
-### From the Unity Asset Store
-
-Download the asset from the [Unity Asset Store](linkToAsset.com)
-
 ### Unity Package
 
 Download the [unity package](linkToUnityPackage) and import into an existing Unity project.
 
 ### Initial Configuration
 
-All classes in ABMU are contained within the `ABM` namespace, so scripts implementing ABMU functionality should import the `ABM` libraries:
+All classes in ABMU are contained within the `ABMU` namespace, so scripts implementing ABMU functionality should import the `ABMU` libraries:
 
 ```
-using ABM;
-using ABM.Core;
+using ABMU;
+using ABMU.Core;
 ```
 
 ## Usage
@@ -58,7 +54,7 @@ When creating a controller for a simulation, the simulation controller should in
 
 ```
 using UnityEngine;
-using ABM.Core;
+using ABMU.Core;
 
 public class SimpleController : AbstractController
 {
@@ -69,7 +65,7 @@ Similarly, a simulation agent should inherit from the `AbstractAgent` class:
 
 ```
 using UnityEngine;
-using ABM.Core;
+using ABMU.Core;
 
 public class SimpleAgent : AbstractAgent
 {
@@ -102,7 +98,7 @@ Agent behaviours should be defined as methods within the agent class, and can th
 
 ```
 using UnityEngine;
-using ABM.Core;
+using ABMU.Core;
 
 public class SimpleAgent : AbstractAgent
 {
@@ -126,7 +122,7 @@ Agents should be added to the simulation via the controller. The following code 
 
 ```
 using UnityEngine;
-using ABM.Core;
+using ABMU.Core;
 
 public class SimpleController : AbstractController
 {
@@ -146,7 +142,7 @@ public class SimpleController : AbstractController
 ```
 ### Running a simulation
 
-**ABMU** automatically controls and advances the simulation, so no additional code is needed from the user. The `AbstractController` class has a `Step()` function that advances the simulaino by one tick, and is executed during `LateUpdate()`. The controller's `Step()` function calls the `Tick()` method on the `Scheduler`, which keeps a record of all steppers registered so far and executes them once in order.
+**ABMU** automatically controls and advances the simulation, so no additional code is needed from the user. The `AbstractController` class has a `Step()` function that advances the simulation by one tick, and is executed during `LateUpdate()`. The controller's `Step()` function calls the `Tick()` method on the `Scheduler`, which keeps a record of all steppers registered so far and executes them in order.
 
 As initialization and updating is handled by **ABMU**, users **should not** implement any of Unity's event functions, i.e. `Start()`, `Update()`, `FixedUpdate()`, `LateUpdate()`, etc, as they may interfere with **ABMU**'s execution order.
 
