@@ -16,10 +16,9 @@ Behind-the-scenes, ABMU implements a scheduling system to handle the execution o
 ### From Github
 
 Clone this repository and open in the Unity Editor.
-
 ### Unity Package
 
-Download the [unity package](linkToUnityPackage) and import into an existing Unity project.
+Download the [unity package](unityPackage/abm_framework.unitypackage) and import into an existing Unity project.
 
 ### Initial Configuration
 
