@@ -25,10 +25,14 @@ public class Scheduler
     /// </summary>
     List<Stepper> steppersCreatedThisFrame;
 
+    List<Stepper> steppersToRunThisFrame;
+
     /// <summary>
     /// List of steppers flagged to be destroyed during this queue
     /// </summary>
     List<Stepper> steppersDestroyedThisFrame;
+
+    int currentStepperP = -1;
 
     /// <summary>
     /// Constructor method for the Scheduler class
@@ -45,6 +49,7 @@ public class Scheduler
         steppersEveryTick = new Dictionary<Stepper.StepperQueueOrder, Dictionary<int, List<Stepper>>>();
         steppersCreatedThisFrame = new List<Stepper>();
         steppersDestroyedThisFrame = new List<Stepper>();
+        steppersToRunThisFrame = new List<Stepper>();
     }
 
     /// <summary>
@@ -53,6 +58,9 @@ public class Scheduler
     /// <param name="s">The stepper to be added</param>
     public void RegisterStepper(Stepper s){
         steppersCreatedThisFrame.Add(s);
+        if(s.priority >= currentStepperP){
+            steppersToRunThisFrame.Add(s);
+        }
     }
     
     /// <summary>
@@ -217,6 +225,8 @@ public class Scheduler
         DeregisterSteppersDestroyed();
 
         steppersCreatedThisFrame = new List<Stepper>();
+        steppersToRunThisFrame = new List<Stepper>();
+
         steppersDestroyedThisFrame = new List<Stepper>();
 
         List<Stepper.StepperQueueOrder> stepperQVals = new List<Stepper.StepperQueueOrder>(steppers.Keys);
@@ -238,8 +248,17 @@ public class Scheduler
             List<int> stepperPValsUnique = new List<int>(stepperPValsUniqueTemp);
             stepperPValsUnique.Sort((a,b) => a.CompareTo(b));
 
+            int prevStepperP = -1;
+
             foreach (int stepperP in stepperPValsUnique)
             {
+                currentStepperP = stepperP;
+                foreach (Stepper s in steppersToRunThisFrame.FindAll(a => a.priority > prevStepperP && a.priority < stepperP))
+                {
+                    s.Step();
+                }
+                steppersToRunThisFrame = steppersToRunThisFrame.FindAll(a => a.priority >= stepperP);
+
                 if(steppersEveryTick.ContainsKey(stepperQ))
                 {
                     if(steppersEveryTick[stepperQ].ContainsKey(stepperP)){
@@ -262,10 +281,24 @@ public class Scheduler
                         }
                     }
                 }
+
+                for (int i = 0; i < steppersToRunThisFrame.FindAll(a => a.priority == stepperP).Count; i++)
+                {
+                    steppersToRunThisFrame[i].Step();
+                }
+                steppersToRunThisFrame = steppersToRunThisFrame.FindAll(a => a.priority != stepperP);
                 
+                prevStepperP = stepperP;
             }
             
         }
+        steppersToRunThisFrame.Sort((a,b) => a.priority.CompareTo(b.priority));
+        foreach (Stepper s in steppersToRunThisFrame)
+        {
+            s.Step();
+        }
+
+        currentStepperP = -1;
         AdvanceSchedulerTick();
     }
 }

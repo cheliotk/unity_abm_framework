@@ -29,6 +29,9 @@ public class SugarscapePatch : AbstractAgent
             c = Color.white;
         }
         renderer.material.color = c;
+        Vector3 pos = this.transform.position;
+        pos.y = v/2f;
+        this.transform.position = pos;
     }
 
     void Growback(){
