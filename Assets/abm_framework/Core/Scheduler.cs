@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using ABM.Core;
+using ABMU.Core;
 
 /// <summary>
 /// The Scheduler class manages the behaviour execution queue and handles the actual stepper execution calls.

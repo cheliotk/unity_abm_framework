@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using ABM.Core;
+using ABMU.Core;
 
 public class SimpleAgent : AbstractAgent
 {

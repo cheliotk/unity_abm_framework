@@ -26,8 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using UnityEngine;
 using UnityEditor;
 
-using ABM.Core;
-using ABM;
+using ABMU.Core;
+using ABMU;
 
 public class BoidController : AbstractController
 {

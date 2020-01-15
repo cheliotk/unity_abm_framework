@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-using ABM.Core;
+using ABMU.Core;
 
 public class SegregationController : AbstractController
 {

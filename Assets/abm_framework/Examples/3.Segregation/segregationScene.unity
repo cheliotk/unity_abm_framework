@@ -238,9 +238,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71d1865800c31224090e661cda5633a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSimulationPaused: 0
   environmentCellPf: {fileID: 5457209898911150162, guid: bed06f8757087e94cb7b76870e44aa1e,
     type: 3}
-  environmentExtents: {x: 20, y: 1, z: 20}
+  environmentExtents: {x: 10, y: 10, z: 10}
   cells: []
   cellSizeInGameWorld: 20
   agentPf: {fileID: 5566055300717348028, guid: 7c28ef79bc8965f4a92608914eacb863, type: 3}

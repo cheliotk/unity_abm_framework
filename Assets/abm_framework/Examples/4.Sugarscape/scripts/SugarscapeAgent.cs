@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ABM.Core;
-using ABM;
+using ABMU.Core;
+using ABMU;
 
 public class SugarscapeAgent : AbstractAgent
 {
