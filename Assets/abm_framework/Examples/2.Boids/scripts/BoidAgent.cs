@@ -27,7 +27,6 @@ using UnityEngine;
 using UnityEditor;
 
 using ABMU.Core;
-using ABMU;
 
 public class BoidAgent : AbstractAgent
 {

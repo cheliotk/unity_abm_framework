@@ -83,10 +83,6 @@ public class BoidController : AbstractController
         renderFrameCount = Time.frameCount;
         avgDistCovered = 0f;
 
-        // Step(Stepper.StepperQueueOrder.EARLY);
-        // Step(Stepper.StepperQueueOrder.NORMAL);
-        // Step(Stepper.StepperQueueOrder.LATE);
-
         base.Step();
 
         avgDistCovered /= agents.Count;
