@@ -5,6 +5,7 @@ namespace ABMU
         using System.Collections.Generic;
         using UnityEngine;
         using System.Diagnostics;
+        using UnityEditor;
 
         /// <summary>
         /// Abstract controller class. To be used as a blueprint for simulation-specific controllers. A simulation-specific controller should inherit from this class
@@ -36,6 +37,7 @@ namespace ABMU
             public int currentTick {get; private set;}
 
             public bool isSimulationPaused = false;
+            public int endFrame = -1;
             
             /// <summary>
             /// Controller initializer method. Initializes the agent list and records simulation start time (in frames)
@@ -103,9 +105,20 @@ namespace ABMU
             }
 
             /// <summary>
+            /// Pauses the simulation after a predetermined number of ticks
+            /// </summary>
+            public void PauseAtFrame(){
+                #if UNITY_EDITOR
+                    if(endFrame > -1 && currentTick >= endFrame){
+                        EditorApplication.isPaused = true;
+                    }
+                #endif
+            }
+
+            /// <summary>
             /// Starts the whole simulation. Is called at the beginning of the simulation from UnityEngine.
             /// </summary>
-            void Start(){
+            void Awake(){
                 Init();
             }
 

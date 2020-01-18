@@ -35,9 +35,11 @@ namespace ABMU
             /// <summary>
             /// Agent awake method. Is called automatically by UnityEngine when the agent GameObject is instantiated and registers it with the controller
             /// </summary>
-            public virtual void Awake() {
-                _controller = GameObject.FindObjectOfType<AbstractController>();
-                controller.RegisterAgent(this);
+            public virtual void Start() {
+                if(controller == null){
+                    _controller = GameObject.FindObjectOfType<AbstractController>();
+                    controller.RegisterAgent(this);
+                }
             }
 
             /// <summary>
@@ -54,6 +56,10 @@ namespace ABMU
             void RegisterStepper(Stepper s){
                 _steppers.Add(s);
                 _steppers.Sort();
+
+                if(controller == null){
+                    Start();
+                }
                 
                 controller.RegisterStepper(s);
             }
