@@ -78,7 +78,7 @@ public class Scheduler
     /// <param name="s">The stepper to be added</param>
     public void RegisterStepper(Stepper s){
         steppersCreatedThisFrame.Add(s);
-        if(s.priority >= currentStepperP){
+        if(s.priority > currentStepperP && s.startFrame == 0){
             steppersToRunThisFrame.Add(s);
         }
     }
