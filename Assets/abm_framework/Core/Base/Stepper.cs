@@ -80,9 +80,9 @@ namespace ABMU
             }
 
             /// <summary>
-            /// The agent this stepper belongs to
+            /// The Steppable this stepper belongs to
             /// </summary>
-            AbstractAgent owner;
+            Steppable owner;
 
             /// <summary>
             /// Default comparer for Stepper type, using priorities. Extends the Stepper class and allows sorting of Stepper IEnumerables 
@@ -118,7 +118,7 @@ namespace ABMU
             public Stepper(int _stepValue,
                             Utilities.Del callback,
                             int _priorityValue,
-                            AbstractAgent _owner){
+                            Steppable _owner){
                 _step = _stepValue;
                 funcToCall = callback;
                 _priority = _priorityValue;
@@ -146,7 +146,7 @@ namespace ABMU
             public Stepper(int _stepValue,
                             Utilities.Del callback,
                             StepperQueueOrder _stepperQueuePrompt,
-                            AbstractAgent _owner){
+                            Steppable _owner){
                 _step = _stepValue;
                 funcToCall = callback;
                 _stepperQueue = _stepperQueuePrompt;
