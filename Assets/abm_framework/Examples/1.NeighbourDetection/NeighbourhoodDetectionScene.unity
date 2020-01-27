@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657862, g: 0.49641508, b: 0.5748162, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -223,14 +223,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c58efab63a9d3d4f96f443a3e36e786, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSimulationPaused: 0
+  endFrame: -1
   groundPrefab: {fileID: 4737851782944999898, guid: 982abb017b5cced43b31138a42089cb4,
     type: 3}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 100, y: 10, z: 100}
+    m_Extent: {x: 200, y: 10, z: 100}
   agentPrefab: {fileID: 6946409410397387495, guid: 99b1aa450f140834c9bf7e9c909f3477,
     type: 3}
-  numAgents: 100
+  numAgents: 200
   speed: 1.5
   rotationAngle: 33
   viewRange: 19
@@ -310,10 +312,10 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116556176}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.24243483, y: -0.74235743, z: 0.34616724, w: 0.519903}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 50.000004, y: -109.990005, z: 0}

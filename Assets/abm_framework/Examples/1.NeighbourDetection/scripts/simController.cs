@@ -26,12 +26,14 @@ public class simController : AbstractController
         }
         GameObject groundPlane = Instantiate(groundPrefab, bounds.center, Quaternion.identity);
         groundPlane.transform.localScale = bounds.extents*2f/10f;
+        Vector2 tiling = new Vector2(groundPlane.transform.localScale.x, groundPlane.transform.localScale.z);
+        groundPlane.GetComponent<Renderer>().material.mainTextureScale = tiling;
         
         for (int i = 0; i < numAgents; i++)
         {
-            GameObject a = Instantiate(agentPrefab);
-
             Vector3 pos = Utilities.RandomPointInBounds(bounds);
+
+            GameObject a = Instantiate(agentPrefab, pos, Quaternion.AngleAxis(Random.Range(0f,360f), Vector3.up));
             
             simAgent ascript = a.GetComponent<simAgent>();
             ascript.Init(pos, bounds, speed, rotationAngle, viewRange);

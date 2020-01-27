@@ -10,8 +10,8 @@ namespace ABMU
         /// <summary>
         /// Abstract controller class. To be used as a blueprint for simulation-specific controllers. A simulation-specific controller should inherit from this class
         /// </summary>
-        public class AbstractController : MonoBehaviour, IInitializable{
-
+        public class AbstractController : MonoBehaviour, IInitializable
+        {
             int milisDelayCum = 0;
             float millisDelayAvg = 0f;
             public Scheduler scheduler;
