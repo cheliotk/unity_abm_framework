@@ -287,7 +287,8 @@ namespace ABMU
                             if(steppersEveryTick[stepperQ].ContainsKey(stepperP)){
                                 foreach (Stepper s in steppersEveryTick[stepperQ][stepperP])
                                 {
-                                    s.Step();
+                                    if(!steppersDestroyedThisFrame.Contains(s))
+                                        s.Step();
                                 }
                             }
                         }
@@ -299,7 +300,8 @@ namespace ABMU
 
                                     foreach (Stepper s in steppers[stepperQ][stepperP][0])
                                     {
-                                        s.Step();
+                                        if(!steppersDestroyedThisFrame.Contains(s))
+                                            s.Step();
                                     }
                                 }
                             }
