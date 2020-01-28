@@ -143,7 +143,7 @@ public class SimpleController : AbstractController
 
 **ABMU** automatically controls and advances the simulation, so no additional code is needed from the user. The `AbstractController` class has a `Step()` function that advances the simulation by one tick, and is executed during `LateUpdate()`. The controller's `Step()` function calls the `Tick()` method on the `Scheduler`, which keeps a record of all steppers registered so far and executes them in order.
 
-As initialization and updating is handled by **ABMU**, users **should not** implement any of Unity's event functions, i.e. `Start()`, `Update()`, `FixedUpdate()`, `LateUpdate()`, etc, as they may interfere with **ABMU**'s execution order.
+As initialization and updating is handled by **ABMU**, users **should not** implement any of Unity's event functions, i.e. `Start()`, `Update()`, `FixedUpdate()`, `LateUpdate()`, etc, for agent behaviour and model-related updates, as they may interfere with **ABMU**'s execution order. Unity's event functions can be safely used for non-model related behaviours, such as rendering, for an example of this see the [3DNavigation example](Assets/abm_framework/Examples/5.3DNavigation/), where rooms implement the `Start()` and `LateUpdate()` methods to detect agents and render accordingly.
 
 ## Examples
 
