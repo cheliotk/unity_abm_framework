@@ -160,7 +160,7 @@ More examples are provided in the project, in the [Examples](Assets/abm_framewor
 
 ## Documentation
 
-More detailed documentation can be found in the [Wiki](Wiki).
+More detailed documentation can be found in the [Wiki](../../../wiki).
 
 ## Licensing
 
