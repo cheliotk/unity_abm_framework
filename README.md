@@ -26,7 +26,7 @@ Download the [unity package](unityPackage/abm_framework.unitypackage) and import
 
 All classes in ABMU are contained within the `ABMU` namespace, so scripts implementing ABMU functionality should import the `ABMU` libraries:
 
-```
+``` csharp
 using ABMU;
 using ABMU.Core;
 ```
@@ -53,7 +53,7 @@ ABMU provides two abstract classes for implementing the first two, the `Abstract
 
 When creating a controller for a simulation, the simulation controller should inherit from the `AbstractController` class:
 
-```
+``` csharp
 using UnityEngine;
 using ABMU.Core;
 
@@ -64,7 +64,7 @@ public class SimpleController : AbstractController
 ```
 Similarly, a simulation agent should inherit from the `AbstractAgent` class:
 
-```
+``` csharp
 using UnityEngine;
 using ABMU.Core;
 
@@ -75,7 +75,7 @@ public class SimpleAgent : AbstractAgent
 ```
 The controller and agent abstract classes define methods for initializing the classes, which can (and most probably should) be overriden to implement functionality specific to the simulation:
 
-```
+``` csharp
 public class SimpleController : AbstractController
 {
     public override void Init(){
@@ -97,7 +97,7 @@ Note that when overriding an abstract method, it is important to call the method
 ### Defining Behaviours
 Agent behaviours should be defined as methods within the agent class, and can then be added to the scheduler queue for execution as **Steppers**, using the `CreateStepper(MethodName)` method. The following code defines an agent behaviour (the `Move()` method), creates a stepper from that behaviour, and registers it to the scheduler (Stepper registration to the scheduler happens automatically when `CreateStepper()` is called).
 
-```
+``` csharp
 using UnityEngine;
 using ABMU.Core;
 
@@ -121,7 +121,7 @@ Once an agent class has been created, it should be added to a GameObject in the 
 
 Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller (the created agent prefab should be added to the `agentPrefab` reference field manually from within the Unity Editor), and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
 
-```
+``` csharp
 using UnityEngine;
 using ABMU.Core;
 
