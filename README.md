@@ -162,6 +162,10 @@ More examples are provided in the project, in the [Examples](Assets/abm_framewor
 
 More detailed documentation can be found in the [Wiki](../../wiki).
 
+## Other
+
+**ABMU** has been developed and tested with Unity version 2018.3.0f2. It should probably work with all newer versions of Unity as well (and probably older versions too), but no guarantees. 
+
 ## Licensing
 
 The code in this project is licensed under [MIT license](../blob/master/LICENSE).
