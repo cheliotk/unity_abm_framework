@@ -95,7 +95,7 @@ public class SimpleAgent : AbstractAgent
 Note that when overriding an abstract method, it is important to call the method on the base class as well, before implementing any additional functionality.
 
 ### Defining Behaviours
-Agent behaviours should be defined as methods within the agent class, and can then be added to the scheduler queue for execution as **Steppers**, using the `CreateStepper(MethodName)` method. The following code defines an agent behaviour (the `Move()` method), creates a stepper from that behaviour, and registers it to the scheduler.
+Agent behaviours should be defined as methods within the agent class, and can then be added to the scheduler queue for execution as **Steppers**, using the `CreateStepper(MethodName)` method. The following code defines an agent behaviour (the `Move()` method), creates a stepper from that behaviour, and registers it to the scheduler (Stepper registration to the scheduler happens automatically when `CreateStepper()` is called).
 
 ```
 using UnityEngine;
@@ -119,7 +119,7 @@ Once a stepper has been created and registered, it will be automatically execute
 
 Once an agent class has been created, it should be added to a GameObject in the Unity Editor and converted into a prefab.
 
-Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller, and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
+Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller (the created agent prefab should be added to the `agentPrefab` reference manually from within the Unity Editor), and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
 
 ```
 using UnityEngine;
@@ -156,7 +156,11 @@ More examples are provided in the project, in the [Examples](Assets/abm_framewor
 - An implementation of Raynolds' (1987) [3D Boids model](http://www.red3d.com/cwr/boids/) ([ref](https://doi.org/10.1145/37401.37406))
 - Schelling's (1971) [Segregation model](http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/) ([ref](https://doi.org/10.1080/0022250X.1971.9989794)), adapted to run in 3D space
 - An implementation of Epstein & Axtell's (1996) [Sugarscape model](https://en.wikipedia.org/wiki/Sugarscape) ([ref](https://doi.org/10.7551/mitpress/3374.003.0004))
-- A **3D Navigation** model, where agents wander randomly within an indoor multi-storey environment using Unity's NavMesh and pathfinding. 
+- A **3D Navigation** model, where agents wander randomly within an indoor multi-storey environment using Unity's NavMesh and pathfinding.
+
+## Documentation
+
+More detailed documentation can be found in the [Wiki](Wiki).
 
 ## Licensing
 
