@@ -170,4 +170,4 @@ More detailed documentation on **ABMU** methods and classes can be found in the 
 
 ## Licensing
 
-The code in this project is licensed under [MIT license](blob/master/LICENSE).
+The code in this project is licensed under [MIT license](../../blob/master/LICENSE).
