@@ -44,7 +44,7 @@ The overview of a model implemented in ABMU is the following:
 
 A simulation in ABMU is contained within a Unity scene, and requires 3 elements:
 1. A **Controller** object
-2. An **Agent** object
+2. An **Agent** prefab object
 3. A **Scheduler** object
 
 ABMU provides two abstract classes for implementing the first two, the `AbstractController` and the `AbstractAgent` class. The `Scheduler` object is created automatically by the controller when the simulation is started.
@@ -105,10 +105,10 @@ public class SimpleAgent : AbstractAgent
 {
     public override void Init(){
         base.Init();
-        CreateStepper(Move);
+        CreateStepper(Move);    // Converting the behaviour into a Stepper. Registration to the Scheduler happens automatically when a new Stepper is created 
     }
 
-    void Move(){
+    void Move(){    // Definition of the behaviour method
         this.transform.position += Random.insideUnitSphere;
     }
 }
@@ -117,9 +117,9 @@ Once a stepper has been created and registered, it will be automatically execute
 
 ### Instantiating agents
 
-Once an agent class has been created, it should be added to a GameObject in the Unity Editor and converted into a prefab.
+Once an agent class has been created, it should be added to a GameObject in the Unity Editor and converted into a prefab, to act as an agent avatar.
 
-Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller (the created agent prefab should be added to the `agentPrefab` reference manually from within the Unity Editor), and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
+Agents should be added to the simulation via the controller. The following code defines a reference to the agent GameObject in the controller (the created agent prefab should be added to the `agentPrefab` reference field manually from within the Unity Editor), and once the scene is started, adds 100 agents in the scene, and starts execution of the simulation.
 
 ```
 using UnityEngine;
@@ -145,7 +145,7 @@ public class SimpleController : AbstractController
 
 **ABMU** automatically controls and advances the simulation, so no additional code is needed from the user. The `AbstractController` class has a `Step()` function that advances the simulation by one tick, and is executed during `LateUpdate()`. The controller's `Step()` function calls the `Tick()` method on the `Scheduler`, which keeps a record of all steppers registered so far and executes them in order.
 
-As initialization and updating is handled by **ABMU**, users **should not** implement any of Unity's event functions, i.e. `Start()`, `Update()`, `FixedUpdate()`, `LateUpdate()`, etc, for agent behaviour and model-related updates, as they may interfere with **ABMU**'s execution order. Unity's event functions can be safely used for non-model related behaviours, such as rendering, for an example of this see the [3DNavigation example](Assets/abm_framework/Examples/5.3DNavigation/), where rooms implement the `Start()` and `LateUpdate()` methods to detect agents and render accordingly.
+As initialization and updating is handled by **ABMU**, users **should not** implement any of Unity's event functions, i.e. `Start()`, `Update()`, `FixedUpdate()`, `LateUpdate()`, etc, for agent behaviour and model-related updates, as they may interfere with **ABMU**'s execution order. Unity's event functions can be safely used for non-model related behaviours, such as rendering (for an example of this see the [3DNavigation example](Assets/abm_framework/Examples/5.3DNavigation/), where rooms implement the `Start()` and `LateUpdate()` methods to detect agents and render accordingly).
 
 ## Examples
 
@@ -158,9 +158,11 @@ More examples are provided in the project, in the [Examples](Assets/abm_framewor
 - An implementation of Epstein & Axtell's (1996) [Sugarscape model](https://en.wikipedia.org/wiki/Sugarscape) ([ref](https://doi.org/10.7551/mitpress/3374.003.0004))
 - A **3D Navigation** model, where agents wander randomly within an indoor multi-storey environment using Unity's NavMesh and pathfinding.
 
+To run the examples, load the respective scene in Unity and press Play.
+
 ## Documentation
 
-More detailed documentation can be found in the [Wiki](../../wiki).
+More detailed documentation on **ABMU** methods and classes can be found in the [Wiki](../../wiki).
 
 ## Other
 
