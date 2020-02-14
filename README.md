@@ -7,11 +7,11 @@ The Agent-Based Modelling Framework for Unity3D (**ABMU** for short) is a set of
 
 ABMU allows modellers to take advantage of Unity's built-in methods and classes to create complex agent behaviours in 3D, including Physics, Navigation, Animation, etc, all written in native `C#`.
 
-Developers familiar with Unity3D should find the ABMU framework quite familiar to work with, as it provides simple hooks for converting native Unity methods into ABMU behaviours.
+Developers familiar with Unity3D should find the ABMU framework quite familiar to work with, as it provides simple hooks for converting methods written in Unity into ABMU behaviours.
 
 ABMU is extendable, and can be coupled with other Unity libraries and assets. 
 
-Behind-the-scenes, ABMU implements a scheduling system to handle the execution of agent behaviours at the correct time, simplifying the timestep implementation process and allowing developers to focus on the agent and model behaviour.
+Behind-the-scenes, ABMU implements a scheduling system to handle the execution of agent behaviours at the correct time, simplifying the timestep implementation process and allowing modellers to focus on the agent and model behaviour.
 
 ## Installation / Getting started
 
