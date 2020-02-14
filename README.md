@@ -35,7 +35,7 @@ using ABMU.Core;
 
 ### Overview
 
-ABMU implements agent behaviour through the concept of the `Stepper` object. A `Stepper` is a single self-contained method that is defined and executed by an agent. When a `Stepper` is created, it is automatically added to the `Scheduler` queue to be executed at subsequent updates.
+ABMU implements agent behaviour through the concept of the `Stepper` object. A `Stepper` is a single self-contained method that is defined and executed by an agent. When a `Stepper` is created, it is automatically added to the execution queue to be executed at subsequent updates.
 
 The overview of a model implemented in ABMU is the following:
 1. `Agents` define their own behaviours as `Steppers`, and register them to the `Scheduler`.
