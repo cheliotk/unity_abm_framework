@@ -3,7 +3,7 @@
 # Unity ABM Framework (ABMU)
 > An Agent-Based Modelling (ABM) Framework for Unity3D
 
-The Agent-Based Modelling Framework for Unity3D (**ABMU** for short) is a set of tools that allow the development of Agent-Based Models (ABM) in the Unity3D platform.
+The Agent-Based Modelling Framework for Unity3D (**ABMU** for short) is a set of tools that allow the development of [Agent-Based Models (ABM)](https://en.wikipedia.org/wiki/Agent-based_model) in the [Unity3D](https://unity.com/) platform.
 
 ABMU allows modellers to take advantage of Unity's built-in methods and classes to create complex agent behaviours in 3D, including Physics, Navigation, Animation, etc, all written in native `C#`.
 
