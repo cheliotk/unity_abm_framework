@@ -38,8 +38,8 @@ using ABMU.Core;
 ABMU implements agent behaviour through the concept of the `Stepper` object. A `Stepper` is a single self-contained method that is defined and executed by an agent. When a `Stepper` is created, it is automatically added to the execution queue to be executed at subsequent updates.
 
 The overview of a model implemented in ABMU is the following:
-1. `Agents` define their own behaviours as `Steppers`, and register them to the `Scheduler`.
-2. The `Controller` handles top-level model elements, such as adding `Agents` to the simulation, keeping track of simulation parameters, etc.
+1. `Agents` define their own behaviours as `Steppers`, and register them with the `Controller`.
+2. The `Controller` passes `Steppers` to the `Scheduler` queue for execution, and handles general top-level model elements, such as adding `Agents` to the simulation, keeping track of simulation parameters, etc.
 3. On each frame, the `Scheduler` loops through all `Steppers` registered to execute at that frame, and calls the relevant method on each agent.
 
 A simulation in ABMU is contained within a Unity scene, and requires 3 elements:
