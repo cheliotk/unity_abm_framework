@@ -153,7 +153,7 @@ More examples are provided in the project, in the [Examples](Assets/abm_framewor
 
 - The simple random movement model used in this document.
 - A **Neighbour Detection** model, where randomly wandering agents alter their speed and size based on the number of other agents in their neighbourhood.
-- An implementation of Raynolds' (1987) [3D Boids model](http://www.red3d.com/cwr/boids/) ([ref](https://doi.org/10.1145/37401.37406))
+- An implementation of Reynolds' (1987) [3D Boids model](http://www.red3d.com/cwr/boids/) ([ref](https://doi.org/10.1145/37401.37406))
 - Schelling's (1971) [Segregation model](http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/) ([ref](https://doi.org/10.1080/0022250X.1971.9989794)), adapted to run in 3D space
 - An implementation of Epstein & Axtell's (1996) [Sugarscape model](https://en.wikipedia.org/wiki/Sugarscape) ([ref](https://doi.org/10.7551/mitpress/3374.003.0004))
 - A **3D Navigation** model, where agents wander randomly within an indoor multi-storey environment using Unity's NavMesh and pathfinding.
@@ -170,4 +170,4 @@ More detailed documentation on **ABMU** methods and classes can be found in the 
 
 ## Licensing
 
-The code in this project is licensed under [MIT license](../blob/master/LICENSE).
+The code in this project is licensed under [MIT license](blob/master/LICENSE).

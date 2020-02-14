@@ -1,3 +1,8 @@
+/*
+This code is licensed under MIT license, Copyright (c) 2019 Kostas Cheliotis
+https://github.com/cheliotk/unity_abm_framework/blob/master/LICENSE
+*/
+
 namespace ABMU
 {
     namespace Core

@@ -33,7 +33,6 @@ public class BoidController : AbstractController
 {
     [Header("Sim Parameters")]
     public Bounds bounds;
-    public int endFrame = 5000;
     public int frameCount = 0;
     public int renderFrameCount = 0;
 
@@ -74,11 +73,6 @@ public class BoidController : AbstractController
     }
 
     public override void Step(){
-        if(frameCount > endFrame){
-            return;
-        }
-        PauseAtFrame();
-
         frameCount ++;
         renderFrameCount = Time.frameCount;
         avgDistCovered = 0f;
@@ -101,15 +95,6 @@ public class BoidController : AbstractController
     public GameObject Spawn()
     {
         return Instantiate(boidPrefab);
-    }
-
-    void PauseAtFrame(){
-        #if UNITY_EDITOR
-            if(frameCount >= endFrame){
-                Debug.Log(Time.fixedDeltaTime + " | " + avgDistCovered + " | " + Time.realtimeSinceStartup);
-                EditorApplication.isPaused = true;
-            }
-        #endif
     }
 
     public void AgentReportDistCovered(float d){
