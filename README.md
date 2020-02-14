@@ -1,3 +1,5 @@
+![Banner](https://raw.githubusercontent.com/cheliotk/unity_abm_framework/abmu_banner.png)
+
 # Unity ABM Framework (ABMU)
 > An Agent-Based Modelling (ABM) Framework for Unity3D
 
