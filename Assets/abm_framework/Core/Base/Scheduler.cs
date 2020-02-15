@@ -36,7 +36,7 @@ namespace ABMU
             /// key 3--- int index for List of Stepper objects for current frame
             /// val 4---- Stepper object
             /// </summary>
-            public Dictionary<Stepper.StepperQueueOrder, Dictionary<int, List<Stepper>>> steppersEveryTick;
+            Dictionary<Stepper.StepperQueueOrder, Dictionary<int, List<Stepper>>> steppersEveryTick;
 
             /// <summary>
             /// List of steppers created during this frame
@@ -49,7 +49,7 @@ namespace ABMU
             List<Stepper> steppersToRunThisFrame;
 
             /// <summary>
-            /// List of steppers flagged to be destroyed during this queue
+            /// List of steppers flagged to be destroyed during this frame
             /// </summary>
             List<Stepper> steppersDestroyedThisFrame;
 
@@ -57,7 +57,7 @@ namespace ABMU
             /// The current stepper priority value,
             /// loops through the entirety of existing priority values during the Tick() method
             /// and resets at the end of the frame.
-            /// Is used to establish proper executino of steppers created this tick 
+            /// Is used to establish proper execution of steppers created this tick 
             /// </summary>
             int currentStepperP = -1;
 
@@ -69,7 +69,7 @@ namespace ABMU
             }
             
             /// <summary>
-            /// Initializer method for this scheduler. Stepper Dict structure initialization
+            /// Initializer method for this scheduler. Stepper Dict structure and List initialization
             /// </summary>
             void Init(){
                 steppers = new Dictionary<Stepper.StepperQueueOrder, Dictionary<int, Dictionary<int, List<Stepper> >>>();
@@ -257,8 +257,8 @@ namespace ABMU
             /// <summary>
             /// Executes all steppers registered for execution at this update tick.
             /// Stepper execution is performed synchronously for priority-sensitive steppers by filtering by stepperQueue order and stepper priority value,
-            /// but is a-synchronous for contemporaneous steppers.
-            /// i.e. for steppers with equal priority, all steppers on one agent are executed first before moving to the next agent.
+            /// but is random for contemporaneous steppers.
+            /// i.e. for steppers with equal priority, stepper execution may happen in random order
             /// </summary>
             public void Tick(){
                 RegisterSteppersCreated();

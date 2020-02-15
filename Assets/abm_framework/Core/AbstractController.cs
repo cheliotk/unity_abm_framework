@@ -19,7 +19,7 @@ namespace ABMU
         {
             int milisDelayCum = 0;
             float millisDelayAvg = 0f;
-            public Scheduler scheduler;
+            Scheduler scheduler;
 
             /// <summary>
             /// A register of all agents currently in the simulation
