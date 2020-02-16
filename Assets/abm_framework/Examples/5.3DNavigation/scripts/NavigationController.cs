@@ -22,6 +22,8 @@ public class NavigationController : AbstractController
 
     [Header("Agent Parameters")]
     public float distToTargetThreshold = 2f;
+    [Tooltip("For agent speed calculation, e.g. a value of 30 means that each frame simulates one thirtieth of a second.")]
+    public float fracOfSecPerFrame = 30f;
     public LayerMask agentLm;
 
     public override void Init(){
@@ -36,7 +38,7 @@ public class NavigationController : AbstractController
             nmAgent.Warp(GetRandomPointInRoom(GetRandomRoom()));
             agent.transform.position = nmAgent.nextPosition;
 
-            agent.GetComponent<NavigationAgent>().Init(GetRandomRoom());
+            agent.GetComponent<NavigationAgent>().Init();
         }
     }
 

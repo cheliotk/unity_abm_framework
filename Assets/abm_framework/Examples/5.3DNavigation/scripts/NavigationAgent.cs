@@ -17,10 +17,13 @@ public class NavigationAgent : AbstractAgent
     int timeSpentSitting = 0;
     int stationayrDuration = -1;
 
-    public void Init(GameObject _targetRoom){
+    float fracOfSecPerFrame = 30f;
+
+    public override void Init(){
         base.Init();
         nCont = GameObject.FindObjectOfType<NavigationController>();
         nmAgent = GetComponent<NavMeshAgent>();
+        fracOfSecPerFrame = nCont.fracOfSecPerFrame;
 
         SetNMAgentProperties();
         SetupStationary();
@@ -54,8 +57,7 @@ public class NavigationAgent : AbstractAgent
     }
 
     void Move(){
-        nmAgent.velocity = Vector3.zero;
-        nmAgent.nextPosition = this.transform.position + nmAgent.desiredVelocity*0.03f;
+        nmAgent.nextPosition = this.transform.position + nmAgent.desiredVelocity * (1/fracOfSecPerFrame);
         transform.LookAt(nmAgent.nextPosition, Vector3.up);
         transform.position =  nmAgent.nextPosition;
     }
