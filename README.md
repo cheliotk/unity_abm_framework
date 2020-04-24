@@ -35,7 +35,7 @@ using ABMU.Core;
 
 Example models demonstrating ABMU applicability are provided in the project, in the [Examples](Assets/abm_framework/Examples) folder. Six example models are included:
 
-- The simple random movement model used in this document.
+- The simple random movement model used in [the tutorial](../../wiki/Using-ABMU).
 - A **Neighbour Detection** model, where randomly wandering agents alter their speed and size based on the number of other agents in their neighbourhood.
 - An implementation of Reynolds' (1987) [3D Boids model](http://www.red3d.com/cwr/boids/) ([ref](https://doi.org/10.1145/37401.37406))
 - Schelling's (1971) [Segregation model](http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/) ([ref](https://doi.org/10.1080/0022250X.1971.9989794)), adapted to run in 3D space
@@ -46,7 +46,7 @@ To run the examples, load the respective scene in Unity and press Play.
 
 ## Documentation
 
-More detailed documentation on **ABMU** methods and classes can be found in the [Wiki](../../wiki).
+More detailed documentation on **ABMU** methods and classes as well as tutorials can be found in the [Wiki](../../wiki).
 
 ## Other
 
