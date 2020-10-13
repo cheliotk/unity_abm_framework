@@ -13,7 +13,8 @@ namespace ABMU
         /// <summary>
         /// The Stepper class defines behaviours that can be added to the scheduler and executed at regular intervals.
         /// </summary>
-        public class Stepper: IComparable<Stepper>{
+        public class Stepper: IComparable<Stepper>, ISteppable
+        {
             
             /// <summary>
             /// Definition of stepper queue enumerator, with three values: EARLY, NORMAL, LATE
