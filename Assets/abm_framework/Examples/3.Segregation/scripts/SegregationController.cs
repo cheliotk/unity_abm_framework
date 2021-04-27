@@ -17,7 +17,7 @@ public class SegregationController : AbstractController
     public LayerMask agentLm;
     public LayerMask cellLm;
 
-    [Header("Simulation Variables")]
+    [Header("Instantiation Variables")]
     [Range(0f,1.0f)]
     public float similarityThreshold = 0.4f;
     [Range(0f,1.0f)]
@@ -27,6 +27,15 @@ public class SegregationController : AbstractController
     [Range(int.MinValue + 64, int.MaxValue - 64)]
     public int randomSeed = 0;
 
+    [Header("Simulation Variables")]
+    [SerializeField] float percLikeNeighbours_red = 0f;
+    [SerializeField] float percLikeNeighbours_green = 0f;
+
+    [SerializeField] float percWithNoOppositeNeighbours = 0f;
+
+    [SerializeField] private int population_red = 0;
+    [SerializeField] private int population_green = 0;
+
     public override void Init(){
         base.Init();
 
@@ -35,6 +44,8 @@ public class SegregationController : AbstractController
         GenerateEnvironment();
         SetEnvironmentCellNeighbourhoods();
         GenerateAgents();
+
+        CalculateSimulationStats();
     }
 
     public override void Step(){
@@ -46,6 +57,9 @@ public class SegregationController : AbstractController
                 agentsSettled ++;
             }
         }
+
+        CalculateSimulationStats();
+
         if(agentsSettled == agents.Count){
             EditorApplication.isPaused = true;
         }
@@ -88,7 +102,49 @@ public class SegregationController : AbstractController
             cellScript cell = FindFreeCell();
 
             sa.Init(cell);
+
+            if (sa.agentType == SegregationUtilities.agentType.RED)
+            {
+                population_red++;
+            }
+            else
+            {
+                population_green++;
+            }
         }
+
+        foreach (SegregationAgent sa in agents)
+        {
+            sa.CalculateInitialStats();
+        }
+    }
+
+    void CalculateSimulationStats()
+    {
+        float likeNeighboursSum_red = 0f;
+        float likeNeighboursSum_green = 0f;
+
+        int noOppNeighbours = 0;
+
+        foreach (SegregationAgent sa in agents)
+        {
+            if (sa.oppositeNeighbours == 0)
+                noOppNeighbours++;
+
+            if(sa.agentType == SegregationUtilities.agentType.RED)
+            {
+                likeNeighboursSum_red += sa.likeNeighboursPerc;
+            }
+            else
+            {
+                likeNeighboursSum_green += sa.likeNeighboursPerc;
+            }
+        }
+
+        percLikeNeighbours_red = likeNeighboursSum_red / population_red;
+        percLikeNeighbours_green = likeNeighboursSum_green / population_green;
+
+        percWithNoOppositeNeighbours = (float) noOppNeighbours / agents.Count;
     }
 
     public cellScript FindFreeCell(){

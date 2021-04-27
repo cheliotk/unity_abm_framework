@@ -390,7 +390,7 @@ MonoBehaviour:
   endFrame: -1
   environmentCellPf: {fileID: 5457209898911150162, guid: bed06f8757087e94cb7b76870e44aa1e,
     type: 3}
-  environmentExtents: {x: 10, y: 10, z: 10}
+  environmentExtents: {x: 16, y: 1, z: 13}
   cells: []
   cellSizeInGameWorld: 20
   agentPf: {fileID: 5566055300717348028, guid: 7c28ef79bc8965f4a92608914eacb863, type: 3}
@@ -400,9 +400,14 @@ MonoBehaviour:
   cellLm:
     serializedVersion: 2
     m_Bits: 1024
-  similarityThreshold: 0.4
-  agentPopulationPerc: 0.9
-  randomSeed: 0
+  similarityThreshold: 0.5
+  agentPopulationPerc: 0.7
+  randomSeed: 3
+  percLikeNeighbours_red: 0
+  percLikeNeighbours_green: 0
+  percWithNoOppositeNeighbours: 0
+  population_red: 0
+  population_green: 0
 --- !u!1 &1340664278
 GameObject:
   m_ObjectHideFlags: 0
