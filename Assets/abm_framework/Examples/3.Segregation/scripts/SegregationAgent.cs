@@ -11,6 +11,11 @@ public class SegregationAgent : AbstractAgent
     public List<SegregationAgent> neighbours;
     cellScript currentCell;
     public bool needToMove = false;
+
+    public int likeNeighbours = 0;
+    public int oppositeNeighbours = 0;
+    public float likeNeighboursPerc = 0f;
+    public float oppositeNeighboursPerc = 0f;
     
     public void Init(cellScript cell){
         base.Init();
@@ -39,7 +44,10 @@ public class SegregationAgent : AbstractAgent
         CreateStepper(FindNeighbours, 2, 100);
         CreateStepper(CheckNeighbourhoodIsOK, 2, 200);
         CreateStepper(Move, 2, 300, 1);
+        CreateStepper(CalculateNeighbourhoodStats, 2, 400);
     }
+
+    public void CalculateInitialStats() => CalculateNeighbourhoodStats();
 
     void FindNeighbours(){
         neighbours = new List<SegregationAgent>();
@@ -81,7 +89,7 @@ public class SegregationAgent : AbstractAgent
                 }
             }
             float val = (float)counter/neighbours.Count;
-            if(val > segController.similarityThreshold){
+            if(val >= segController.similarityThreshold){
                 isOK = false;
             }
         }
@@ -106,6 +114,27 @@ public class SegregationAgent : AbstractAgent
             c.a = 0.6f;
             GetComponent<Renderer>().material.color = c;
         }
+    }
+
+    void CalculateNeighbourhoodStats()
+    {
+        FindNeighbours();
+        likeNeighbours = 0;
+        oppositeNeighbours = 0;
+        foreach (var n in neighbours)
+        {
+            if(n.agentType == this.agentType)
+            {
+                likeNeighbours++;
+            }
+            else
+            {
+                oppositeNeighbours++;
+            }
+        }
+
+        likeNeighboursPerc = (float)likeNeighbours / (float)neighbours.Count;
+        oppositeNeighboursPerc = (float)oppositeNeighbours / (float)neighbours.Count;
     }
 }
 

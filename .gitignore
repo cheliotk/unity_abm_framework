@@ -47,3 +47,4 @@ Assets/RandomFromDistributions/Examples
 # VSCode Cache and settings
 .vscode
 .VSCodeCounter
+.vsconfig
