@@ -39,7 +39,7 @@ public class SegregationController : AbstractController
     public override void Init(){
         base.Init();
 
-        rand = new System.Random(randomSeed);
+        //rand = new System.Random(randomSeed);
 
         GenerateEnvironment();
         SetEnvironmentCellNeighbourhoods();
@@ -61,6 +61,7 @@ public class SegregationController : AbstractController
         CalculateSimulationStats();
 
         if(agentsSettled == agents.Count){
+            //isSimulationPaused = true;
             EditorApplication.isPaused = true;
         }
 
@@ -155,10 +156,12 @@ public class SegregationController : AbstractController
         // }
         // return (cs);
 
-        cellScript cs = cells[rand.Next(cells.Length)];
+        //cellScript cs = cells[rand.Next(cells.Length)];
+        cellScript cs = cells[Random.Range(0,cells.Length)];
 
-        while(cs.isOccupied){
-            cs = cells[rand.Next(cells.Length)];
+        while (cs.isOccupied){
+            //cs = cells[rand.Next(cells.Length)];
+            cs = cells[Random.Range(0, cells.Length)];
         }
         return (cs);
     }

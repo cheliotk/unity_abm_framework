@@ -19,6 +19,7 @@ namespace ABMU
         {
             int milisDelayCum = 0;
             float millisDelayAvg = 0f;
+            Stopwatch stopwatch = new Stopwatch();
             Scheduler scheduler;
 
             /// <summary>
@@ -41,8 +42,14 @@ namespace ABMU
             /// </summary>
             public int currentTick {get; private set;}
 
-            public bool isSimulationPaused = false;
-            public int endFrame = -1;
+            [SerializeField] protected bool isSimulationPaused = false;
+            public bool IsSimulationPaused => isSimulationPaused;
+
+            [SerializeField] protected int endFrame = -1;
+
+            [SerializeField] protected bool useSeed = false;
+            [SerializeField] protected int seed = 0;
+            [SerializeField] protected bool monitorPerformance = false;
             
             /// <summary>
             /// Controller initializer method. Initializes the agent list and records simulation start time (in frames)
@@ -52,6 +59,12 @@ namespace ABMU
                 simStartTime = Time.frameCount;
                 currentTick = 0;
                 scheduler = new Scheduler();
+
+                if (!useSeed)
+                {
+                    seed = Random.Range(int.MinValue, int.MaxValue);
+                }
+                Random.InitState(seed);
             }
 
             /// <summary>
@@ -61,18 +74,29 @@ namespace ABMU
                 if(Time.frameCount - simStartTime <= 0){
                     return;
                 }
+
                 if(!isSimulationPaused){
                     currentTick ++;
-                
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
+
+                    if (currentTick - simStartTime > endFrame)
+                    {
+                        isSimulationPaused = true;
+                        return;
+                    }
+
+                    if (monitorPerformance)
+                    {
+                        stopwatch.Start();
+                    }                
 
                     scheduler.Tick();
 
-                    stopwatch.Stop();
-                    milisDelayCum += stopwatch.Elapsed.Milliseconds;
-                    if(Time.frameCount - simStartTime != 0)
+                    if (monitorPerformance)
+                    {
+                        stopwatch.Stop();
+                        milisDelayCum += stopwatch.Elapsed.Milliseconds;
                         millisDelayAvg  = (float)milisDelayCum / (Time.frameCount - simStartTime);
+                    }
                 }
             }
 

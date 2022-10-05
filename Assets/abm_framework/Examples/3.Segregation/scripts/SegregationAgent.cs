@@ -30,7 +30,10 @@ public class SegregationAgent : AbstractAgent
 
         agentType = SegregationUtilities.agentType.RED;
         // if(Random.Range(0f,1.0f) < 0.5f){
-        if(segController.rand.NextDouble() < 0.5f){
+
+        //if(segController.rand.NextDouble() < 0.5f){
+        if (Random.Range(0f, 1f) < 0.5f)
+        {
             agentType = SegregationUtilities.agentType.GREEN;
         }
 
@@ -47,7 +50,11 @@ public class SegregationAgent : AbstractAgent
         CreateStepper(CalculateNeighbourhoodStats, 2, 400);
     }
 
-    public void CalculateInitialStats() => CalculateNeighbourhoodStats();
+    public void CalculateInitialStats()
+    {
+        CheckNeighbourhoodIsOK();
+        CalculateNeighbourhoodStats();
+    }
 
     void FindNeighbours(){
         neighbours = new List<SegregationAgent>();
