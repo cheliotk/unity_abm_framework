@@ -51,7 +51,8 @@ More detailed documentation on **ABMU** methods and classes as well as tutorials
 ## How to cite
 
 To cite ABMU in your work, please refer to the following publication:
-Cheliotis, K. (2021). ABMU: An Agent-Based Modelling Framework for Unity3D. SoftwareX, 15, 100771. https://doi.org/10.1016/j.softx.2021.100771
+
+> Cheliotis, K. (2021). ABMU: An Agent-Based Modelling Framework for Unity3D. SoftwareX, 15, 100771. https://doi.org/10.1016/j.softx.2021.100771
 
 ## Other
 
