@@ -48,6 +48,11 @@ To run the examples, load the respective scene in Unity and press Play.
 
 More detailed documentation on **ABMU** methods and classes as well as tutorials can be found in the [Wiki](../../wiki).
 
+## How to cite
+
+To cite ABMU in your work, please refer to the following publication:
+Cheliotis, K. (2021). ABMU: An Agent-Based Modelling Framework for Unity3D. SoftwareX, 15, 100771. https://doi.org/10.1016/j.softx.2021.100771
+
 ## Other
 
 **ABMU** has been developed and tested with Unity version 2018.3.0f2. It should probably work with all newer versions of Unity as well (and probably older versions too), but no guarantees. 
