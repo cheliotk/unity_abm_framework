@@ -1,8 +1,8 @@
-![Banner](https://github.com/cheliotk/unity_abm_framework/blob/main/abmu_banner.png)
-
 > **Warning**
 >
 > This branch is now archived and will bever be updated again. It fully matches the work presented in [this paper](https://doi.org/10.1016/j.softx.2021.100771)
+
+![Banner](https://github.com/cheliotk/unity_abm_framework/blob/main/abmu_banner.png)
 
 # Unity ABM Framework (ABMU)
 > An Agent-Based Modelling (ABM) Framework for Unity3D
