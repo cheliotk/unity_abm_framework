@@ -61,9 +61,8 @@ namespace ABMU
                 scheduler = new Scheduler();
 
                 if (!useSeed)
-                {
                     seed = Random.Range(int.MinValue, int.MaxValue);
-                }
+
                 Random.InitState(seed);
             }
 
@@ -76,13 +75,14 @@ namespace ABMU
                 }
 
                 if(!isSimulationPaused){
-                    currentTick ++;
 
-                    if (currentTick - simStartTime > endFrame)
+                    if (endFrame > 0 && currentTick - simStartTime > endFrame)
                     {
                         isSimulationPaused = true;
                         return;
                     }
+
+                    currentTick ++;
 
                     if (monitorPerformance)
                     {
